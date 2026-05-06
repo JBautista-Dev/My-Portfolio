@@ -1,59 +1,144 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  Bars3Icon,
+  XMarkIcon,
+  SunIcon,
+  MoonIcon,
+} from "@heroicons/react/24/outline";
+
+const navLinks = [
+  { label: "Home", href: "#home" },
+  { label: "About", href: "#about" },
+  { label: "Projects", href: "#projects" },
+  { label: "Contact", href: "#contact" },
+];
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isSticky, setIsSticky] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      // When window scrollY > 100px, make header fixed
-      if (window.scrollY > 100) {
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
+    setIsDark(document.documentElement.classList.contains("dark"));
+    const handleScroll = () => setIsScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const toggleDark = () => {
+    const next = !isDark;
+    setIsDark(next);
+    document.documentElement.classList.toggle("dark", next);
+    localStorage.setItem("theme", next ? "dark" : "light");
+  };
+
+  const closeMenu = () => setIsOpen(false);
+
+  const iconClass = `w-6 h-6 transition-colors ${
+    isScrolled ? "text-zinc-700 dark:text-zinc-300" : "text-white"
+  }`;
 
   return (
     <header
       className={`w-full top-0 left-0 z-50 transition-all duration-300 ${
-        isSticky
-          ? "fixed bg-white shadow-md"
-          : "relative bg-transparent"
+        isScrolled
+          ? "fixed bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md shadow-sm border-b border-zinc-100 dark:border-zinc-800"
+          : "absolute bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
-        <div className="text-2xl font-bold">Joshua</div>
+      <div className="max-w-5xl mx-auto flex justify-between items-center px-6 py-4">
+        <a
+          href="#home"
+          className={`text-xl font-bold tracking-tight transition-colors ${
+            isScrolled ? "text-zinc-900 dark:text-white" : "text-white"
+          }`}
+        >
+          Joshua<span className="text-blue-500">.</span>
+        </a>
 
-        {/* Desktop Menu */}
-        <nav className="hidden md:flex space-x-6">
-          <a href="#home" className="hover:text-blue-500">Home</a>
-          <a href="#projects" className="hover:text-blue-500">Projects</a>
-          <a href="#contact" className="hover:text-blue-500">Contact</a>
+        {/* Desktop nav */}
+        <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
+          {navLinks.map(({ label, href }) => (
+            <a
+              key={label}
+              href={href}
+              className={`text-sm font-medium transition-colors ${
+                isScrolled
+                  ? "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                  : "text-white/80 hover:text-white"
+              }`}
+            >
+              {label}
+            </a>
+          ))}
+
+          {/* Dark mode toggle */}
+          <button
+            type="button"
+            onClick={toggleDark}
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            className={`p-2 rounded-full transition-colors ${
+              isScrolled
+                ? "hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                : "hover:bg-white/10"
+            }`}
+          >
+            {isDark ? (
+              <SunIcon className={iconClass} />
+            ) : (
+              <MoonIcon className={iconClass} />
+            )}
+          </button>
         </nav>
 
-        {/* Mobile Burger Icon */}
-        <div className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? (
-            <XMarkIcon className="w-8 h-8 text-gray-700" />
-          ) : (
-            <Bars3Icon className="w-8 h-8 text-gray-700" />
-          )}
+        {/* Mobile right controls */}
+        <div className="md:hidden flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleDark}
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            className="p-1 rounded-full"
+          >
+            {isDark ? (
+              <SunIcon className={iconClass} />
+            ) : (
+              <MoonIcon className={iconClass} />
+            )}
+          </button>
+
+          <button
+            type="button"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
+            className="p-1 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            onClick={() => setIsOpen((prev) => !prev)}
+          >
+            {isOpen ? (
+              <XMarkIcon className={iconClass} />
+            ) : (
+              <Bars3Icon className={iconClass} />
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       {isOpen && (
-        <nav className="md:hidden bg-white shadow-md px-4 py-2 flex flex-col space-y-2">
-          <a href="#home" className="hover:text-blue-500" onClick={() => setIsOpen(false)}>Home</a>
-          <a href="#projects" className="hover:text-blue-500" onClick={() => setIsOpen(false)}>Projects</a>
-          <a href="#contact" className="hover:text-blue-500" onClick={() => setIsOpen(false)}>Contact</a>
+        <nav
+          aria-label="Mobile navigation"
+          className="md:hidden bg-white dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 px-6 py-4 flex flex-col gap-4"
+        >
+          {navLinks.map(({ label, href }) => (
+            <a
+              key={label}
+              href={href}
+              onClick={closeMenu}
+              className="text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              {label}
+            </a>
+          ))}
         </nav>
       )}
     </header>

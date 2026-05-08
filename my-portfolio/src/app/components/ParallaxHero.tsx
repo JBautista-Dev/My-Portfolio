@@ -26,7 +26,7 @@ export default function ParallaxHero() {
         aria-hidden="true"
         className="absolute inset-0 bg-cover bg-center will-change-transform"
         style={{
-          backgroundImage: "url('/assets/wallpaper.jpeg')",
+          backgroundImage: "url('/assets/Wallpaper.jpeg')",
           top: "-30%",
           bottom: "-30%",
         }}

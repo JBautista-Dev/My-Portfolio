@@ -42,7 +42,7 @@ export default function Contact() {
         </p>
 
         <a
-          href="mailto:devgdi.sw@gmail.com"
+          href="mailto:joshuabautista0531@gmail.com"
           className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5 mb-12"
         >
           <svg
@@ -64,7 +64,7 @@ export default function Contact() {
 
         <div className="flex justify-center gap-8">
           <a
-            href="https://github.com"
+            href="https://github.com/JBautista-Dev"
             target="_blank"
             rel="noopener noreferrer"
             className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white font-medium transition-colors"

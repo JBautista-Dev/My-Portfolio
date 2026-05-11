@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   Bars3Icon,
   XMarkIcon,
@@ -48,13 +49,15 @@ export default function Header() {
       }`}
     >
       <div className="max-w-5xl mx-auto flex justify-between items-center px-6 py-4">
-        <a
-          href="#home"
-          className={`text-xl font-bold tracking-tight transition-colors ${
-            isScrolled ? "text-zinc-900 dark:text-white" : "text-white"
-          }`}
-        >
-          Joshua<span className="text-blue-500">.</span>
+        <a href="#home" className="flex items-center">
+          <Image
+            src={!isScrolled || isDark ? "/assets/Logo - Darkmode.png" : "/assets/Logo - LIghtmode.png"}
+            alt="Joshua logo"
+            width={120}
+            height={40}
+            className="h-8 w-auto"
+            priority
+          />
         </a>
 
         {/* Desktop nav */}

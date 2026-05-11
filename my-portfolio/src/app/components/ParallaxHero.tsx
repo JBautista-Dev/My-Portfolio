@@ -42,7 +42,7 @@ export default function ParallaxHero() {
       <div className="relative z-10 w-full max-w-3xl mx-auto px-6 text-center text-white">
         <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl px-8 py-12 md:px-16 shadow-2xl">
           <p className="text-sm font-semibold text-blue-400 mb-4 tracking-widest uppercase">
-            Full-Stack Developer
+            Web Developer
           </p>
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
             Hi, I&apos;m{" "}

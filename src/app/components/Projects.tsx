@@ -10,13 +10,6 @@ type Project = {
 
 const projects: Project[] = [
   {
-    title: "Portfolio Website",
-    description:
-      "A modern, responsive portfolio built with Next.js and Tailwind CSS featuring parallax scrolling and smooth scroll-reveal animations.",
-    tags: ["Next.js", "TypeScript", "Tailwind CSS"],
-    href: "#",
-  },
-  {
     title: "Maya",
     description:
       "Ongoing HubSpot CMS maintenance across maya.ph, maya.ph/center, and maya.ph/business — building modules, updating HubDB-driven content, and keeping the marketing, help center, and business sites consistent.",
@@ -30,6 +23,13 @@ const projects: Project[] = [
     tags: ["WordPress", "PHP", "HubDB"],
     href: "https://www.mayabank.ph/",
   },
+    {
+    title: "Portfolio Website",
+    description:
+      "A modern, responsive portfolio built with Next.js and Tailwind CSS featuring parallax scrolling and smooth scroll-reveal animations.",
+    tags: ["Next.js", "TypeScript", "Tailwind CSS"],
+    href: "#",
+  }
 ];
 
 function ProjectCard({ project, delay }: { project: Project; delay: number }) {

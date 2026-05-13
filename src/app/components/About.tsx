@@ -2,14 +2,15 @@
 import { useEffect, useRef, useState } from "react";
 
 const skills = [
-  "TypeScript",
-  "React",
-  "Next.js",
-  "Node.js",
-  "Tailwind CSS",
-  "PostgreSQL",
-  "Git",
-  "Docker",
+    "Hubspot CMS",
+    "HubDB",
+    "HubL",
+    "wordPress",
+    "PHP",
+    "TypeScript",
+    "Next.js",
+    "Tailwind CSS",
+    "Git",
 ];
 
 export default function About() {

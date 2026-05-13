@@ -56,6 +56,8 @@ function ProjectCard({ project, delay }: { project: Project; delay: number }) {
     <a
       ref={cardRef}
       href={project.href}
+      target="_blank"
+      rel="noopener noreferrer"
       className={`group block p-6 bg-white dark:bg-zinc-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 border border-zinc-100 dark:border-zinc-700 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
       }`}

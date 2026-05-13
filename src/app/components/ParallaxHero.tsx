@@ -40,7 +40,7 @@ export default function ParallaxHero() {
 
       {/* Content — glass card */}
       <div className="relative z-10 w-full max-w-3xl mx-auto px-6 text-center text-white">
-        <div className="bg-black/10 backdrop-blur-md border border-white/20 rounded-3xl px-8 py-12 md:px-16 shadow-2xl">
+        <div className="bg-black/30 backdrop-blur-2xl border border-white/20 rounded-3xl px-8 py-12 md:px-16 shadow-2xl">
           <p className="text-sm font-semibold text-blue-400 mb-4 tracking-widest uppercase">
             Web Developer
           </p>

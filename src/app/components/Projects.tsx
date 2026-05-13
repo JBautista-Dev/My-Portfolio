@@ -17,18 +17,18 @@ const projects: Project[] = [
     href: "#",
   },
   {
-    title: "Project Two",
+    title: "Maya",
     description:
-      "Description of your second project. Highlight the problem it solves, your approach, and the key features you built.",
-    tags: ["React", "Node.js", "PostgreSQL"],
-    href: "#",
+      "Ongoing HubSpot CMS maintenance across maya.ph, maya.ph/center, and maya.ph/business — building modules, updating HubDB-driven content, and keeping the marketing, help center, and business sites consistent.",
+    tags: ["HubSpot", "HubDB", "HubL"],
+    href: "https://www.maya.ph/",
   },
   {
-    title: "Project Three",
+    title: "Maya Bank",
     description:
-      "Description of your third project. Focus on the technologies used, your specific role, and the impact of the work.",
-    tags: ["TypeScript", "REST API", "Docker"],
-    href: "#",
+      "Maintain and update the Maya Bank website, handling release deployments, page-level improvements, and coordinating fixes across the stack to keep the banking experience reliable.",
+    tags: ["WordPress", "PHP", "HubDB"],
+    href: "https://www.mayabank.ph/",
   },
 ];
 

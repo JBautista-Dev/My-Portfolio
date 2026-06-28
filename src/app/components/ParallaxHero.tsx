@@ -1,84 +1,139 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import type { CSSProperties } from "react";
 
 export default function ParallaxHero() {
-  const bgRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (bgRef.current) {
-        bgRef.current.style.transform = `translateY(${window.scrollY * 0.45}px)`;
-      }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (glowRef.current)
+          glowRef.current.style.transform = `translateY(${y * 0.3}px)`;
+        if (cardRef.current)
+          cardRef.current.style.transform = `translateY(${y * -0.06}px)`;
+      });
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
   }, []);
 
   return (
     <section
       id="home"
-      className="relative h-screen overflow-hidden flex items-center justify-center"
+      className="relative overflow-hidden px-6 pt-36 pb-20 md:pt-44 md:pb-28"
     >
-      {/* Parallax background */}
+      {/* Background glow */}
       <div
-        ref={bgRef}
+        ref={glowRef}
         aria-hidden="true"
-        className="absolute inset-0 bg-cover bg-center will-change-transform"
-        style={{
-          backgroundImage: "url('/assets/Wallpaper.jpeg')",
-          top: "-30%",
-          bottom: "-30%",
-        }}
+        className="pointer-events-none absolute -top-40 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full blur-[120px]"
+        style={{ background: "var(--glow)" }}
       />
 
-      {/* Gradient overlay */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80"
-      />
-
-      {/* Content — glass card */}
-      <div className="relative z-10 w-full max-w-3xl mx-auto px-6 text-center text-white">
-        <div className="bg-black/30 backdrop-blur-2xl border border-white/20 rounded-3xl px-8 py-12 md:px-16 shadow-2xl">
-          <p className="text-sm font-semibold text-blue-400 mb-4 tracking-widest uppercase">
-            Web Developer
+      <div className="relative mx-auto grid max-w-[1240px] items-center gap-14 md:grid-cols-2">
+        {/* Left column */}
+        <div>
+          <p
+            className="reveal-hero font-mono text-[12px] uppercase tracking-[0.2em] text-[var(--accent-text)]"
+            style={{ "--d": "80ms" } as CSSProperties}
+          >
+            → Web Developer
           </p>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            Hi, I&apos;m{" "}
-            <span className="bg-linear-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              Joshua
-            </span>
+          <h1
+            className="reveal-hero mt-6 font-grotesk font-bold leading-[0.92] tracking-[-0.03em]"
+            style={
+              {
+                fontSize: "clamp(3.2rem, 8.5vw, 7.5rem)",
+                "--d": "160ms",
+              } as CSSProperties
+            }
+          >
+            Hi, I&apos;m
+            <br />
+            <span className="text-[var(--accent-text)]">Joshua</span>
+            <span className="cursor-blink text-[var(--accent-text)]">_</span>
           </h1>
-          <p className="text-lg md:text-xl text-zinc-300 mb-10 max-w-2xl mx-auto leading-relaxed">
-            I build modern, performant web applications with clean code and
-            great user experiences.
+          <p
+            className="reveal-hero mt-7 max-w-md text-[1.15rem] leading-[1.6] text-muted"
+            style={{ "--d": "240ms" } as CSSProperties}
+          >
+            I build modern, performant web applications with clean code and great
+            user experiences.
           </p>
-          <div className="flex gap-4 justify-center flex-wrap">
+          <div
+            className="reveal-hero mt-9 flex flex-wrap gap-4"
+            style={{ "--d": "320ms" } as CSSProperties}
+          >
             <a
               href="#projects"
-              className="px-8 py-3 bg-blue-600 hover:bg-blue-500 rounded-full font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5"
+              className="rounded-md bg-accent px-6 py-3 font-mono text-[13px] uppercase tracking-[0.1em] text-[var(--accent-ink)] transition-transform hover:-translate-y-0.5"
             >
-              View Projects
+              View Projects →
             </a>
             <a
               href="#contact"
-              className="px-8 py-3 border border-white/40 hover:border-white hover:bg-white/10 rounded-full font-semibold transition-all duration-200 hover:-translate-y-0.5"
+              className="rounded-md border border-border-strong px-6 py-3 font-mono text-[13px] uppercase tracking-[0.1em] text-text transition-colors hover:border-[var(--accent-text)] hover:text-[var(--accent-text)]"
             >
               Get In Touch
             </a>
           </div>
         </div>
-      </div>
 
-      {/* Scroll indicator */}
-      <a
-        href="#about"
-        aria-label="Scroll to about section"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 text-white/60 hover:text-white transition-colors animate-bounce"
-      >
-        <ChevronDownIcon className="w-7 h-7" />
-      </a>
+        {/* Right column — terminal card */}
+        <div
+          ref={cardRef}
+          className="reveal-hero will-change-transform"
+          style={{ "--d": "240ms" } as CSSProperties}
+        >
+          <div
+            className="overflow-hidden rounded-xl border border-border-soft shadow-2xl"
+            style={{
+              background: "linear-gradient(160deg, var(--panel-a), var(--panel-b))",
+            }}
+          >
+            {/* Titlebar */}
+            <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+              <span className="h-3 w-3 rounded-full bg-[#ff5f56]" />
+              <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
+              <span className="h-3 w-3 rounded-full bg-[#27c93f]" />
+              <span className="ml-3 font-mono text-[12px] text-faint">
+                joshua@bauworks ~ %
+              </span>
+            </div>
+            {/* Body */}
+            <div className="space-y-4 p-6 font-mono text-[13px] leading-relaxed">
+              <div>
+                <span className="text-[var(--accent-text)]">$</span>{" "}
+                <span className="text-text">whoami</span>
+                <div className="mt-1 text-dim">
+                  Joshua Bautista — Full-Stack Developer
+                </div>
+              </div>
+              <div>
+                <span className="text-[var(--accent-text)]">$</span>{" "}
+                <span className="text-text">stack --list</span>
+                <div className="mt-1 text-dim">
+                  next.js · typescript · hubspot · wordpress · php
+                </div>
+              </div>
+              <div>
+                <span className="text-[var(--accent-text)]">$</span>{" "}
+                <span className="text-text">status &gt; available for work</span>
+                <span className="cursor-blink text-[var(--accent-text)]">_</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

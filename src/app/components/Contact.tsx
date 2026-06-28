@@ -1,84 +1,60 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import SectionMarker from "./SectionMarker";
+import { useReveal } from "./useReveal";
 
 export default function Contact() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(el);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const { ref, visible } = useReveal<HTMLDivElement>();
 
   return (
-    <section
-      id="contact"
-      ref={sectionRef}
-      className={`py-24 px-6 bg-white dark:bg-zinc-950 transition-all duration-700 ease-out ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-      }`}
-    >
-      <div className="max-w-2xl mx-auto text-center">
-        <p className="text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-widest text-sm mb-3">
-          Contact
-        </p>
-        <h2 className="text-4xl font-bold text-zinc-900 dark:text-white mb-5">
-          Let&apos;s Work Together
-        </h2>
-        <p className="text-zinc-600 dark:text-zinc-400 text-lg mb-10 leading-relaxed">
-          Have a project in mind or want to chat? Feel free to reach out —
-          I&apos;m always open to new opportunities and collaborations.
-        </p>
+    <section id="contact" className="px-6 py-24">
+      <div className="mx-auto max-w-[1240px]">
+        <SectionMarker number="03" label="Contact" />
 
-        <a
-          href="mailto:joshuabautista0531@gmail.com"
-          className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5 mb-12"
+        <div
+          ref={ref}
+          className={`reveal ${
+            visible ? "is-visible" : ""
+          } rounded-2xl border border-border-soft bg-[var(--surface)] px-6 py-20 text-center md:px-16`}
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
+          <h2
+            className="font-grotesk font-bold tracking-[-0.02em]"
+            style={{ fontSize: "clamp(2.2rem, 5vw, 4rem)" }}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-            />
-          </svg>
-          Send an Email
-        </a>
+            Let&apos;s Work{" "}
+            <span className="text-[var(--accent-text)]">Together</span>
+          </h2>
+          <p className="mx-auto mt-5 max-w-xl text-[1.1rem] leading-[1.6] text-muted">
+            Have a project in mind or want to chat? Feel free to reach out — I&apos;m
+            always open to new opportunities and collaborations.
+          </p>
 
-        <div className="flex justify-center gap-8">
-          <a
-            href="https://github.com/JBautista-Dev"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white font-medium transition-colors"
-          >
-            GitHub
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white font-medium transition-colors"
-          >
-            LinkedIn
-          </a>
+          <div className="mt-10 flex flex-col items-center gap-6">
+            <a
+              href="mailto:joshuabautista0531@gmail.com"
+              className="rounded-md bg-accent px-7 py-3.5 font-mono text-[13px] uppercase tracking-[0.1em] text-[var(--accent-ink)] transition-transform hover:-translate-y-0.5"
+            >
+              Send an Email →
+            </a>
+
+            <div className="flex gap-3">
+              <a
+                href="https://github.com/JBautista-Dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-md border border-border-strong px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.1em] text-muted transition-colors hover:border-[var(--accent-text)] hover:text-[var(--accent-text)]"
+              >
+                GitHub
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-md border border-border-strong px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.1em] text-muted transition-colors hover:border-[var(--accent-text)] hover:text-[var(--accent-text)]"
+              >
+                LinkedIn
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>

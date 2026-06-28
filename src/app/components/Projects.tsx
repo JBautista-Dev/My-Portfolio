@@ -1,11 +1,13 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import SectionMarker from "./SectionMarker";
+import { useReveal } from "./useReveal";
 
 type Project = {
   title: string;
   description: string;
   tags: string[];
   href: string;
+  thumb: string;
 };
 
 const projects: Project[] = [
@@ -15,6 +17,7 @@ const projects: Project[] = [
       "Ongoing HubSpot CMS maintenance across maya.ph, maya.ph/center, and maya.ph/business — building modules, updating HubDB-driven content, and keeping the marketing, help center, and business sites consistent.",
     tags: ["HubSpot", "HubDB", "HubL"],
     href: "https://www.maya.ph/",
+    thumb: "→ maya.ph",
   },
   {
     title: "Maya Bank",
@@ -22,123 +25,97 @@ const projects: Project[] = [
       "Maintain and update the Maya Bank website, handling release deployments, page-level improvements, and coordinating fixes across the stack to keep the banking experience reliable.",
     tags: ["WordPress", "PHP", "HubDB"],
     href: "https://www.mayabank.ph/",
+    thumb: "→ mayabank.ph",
   },
-    {
+  {
     title: "Portfolio Website",
     description:
       "A modern, responsive portfolio built with Next.js and Tailwind CSS featuring parallax scrolling and smooth scroll-reveal animations.",
     tags: ["Next.js", "TypeScript", "Tailwind CSS"],
     href: "#",
-  }
+    thumb: "→ portfolio",
+  },
 ];
 
-function ProjectCard({ project, delay }: { project: Project; delay: number }) {
-  const cardRef = useRef<HTMLAnchorElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => setIsVisible(true), delay);
-          observer.unobserve(el);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [delay]);
+function ProjectRow({ project, index }: { project: Project; index: number }) {
+  const { ref, visible } = useReveal<HTMLAnchorElement>(index * 100);
 
   return (
     <a
-      ref={cardRef}
+      ref={ref}
       href={project.href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`group block p-6 bg-white dark:bg-zinc-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 border border-zinc-100 dark:border-zinc-700 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-      }`}
-      style={{ transition: "opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.2s, border-color 0.2s" }}
+      className={`reveal ${
+        visible ? "is-visible" : ""
+      } group grid grid-cols-1 items-center gap-6 border-t border-border px-4 py-10 transition-colors hover:bg-[var(--surface-soft)] md:grid-cols-[auto_1fr_320px] md:gap-10`}
     >
-      <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/40 mb-4 flex items-center justify-center group-hover:bg-blue-600 dark:group-hover:bg-blue-600 transition-colors duration-200">
-        <svg
-          className="w-5 h-5 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors duration-200"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.5}
-            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-          />
-        </svg>
-      </div>
-      <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
-        {project.title}
-      </h3>
-      <p className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed mb-4">
-        {project.description}
-      </p>
-      <div className="flex flex-wrap gap-2">
-        {project.tags.map((tag) => (
-          <span
-            key={tag}
-            className="text-xs px-3 py-1 bg-zinc-100 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300 rounded-full"
+      <span className="font-mono text-[13px] text-faint">
+        0{index + 1}
+      </span>
+
+      <div>
+        <div className="flex items-center gap-3">
+          <h3
+            className="font-grotesk font-semibold leading-tight transition-colors group-hover:text-[var(--accent-text)]"
+            style={{ fontSize: "clamp(1.6rem, 3vw, 2.4rem)" }}
           >
-            {tag}
+            {project.title}
+          </h3>
+          <span className="inline-block translate-y-0 text-[var(--accent-text)] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1">
+            ↗
           </span>
-        ))}
+        </div>
+        <p className="mt-3 max-w-xl text-[1.02rem] leading-[1.6] text-muted">
+          {project.description}
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full border border-border-soft px-3 py-1 font-mono text-[11px] uppercase tracking-[0.1em] text-dim"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Thumbnail */}
+      <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-border">
+        <div
+          className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.07]"
+          style={{
+            background:
+              "repeating-linear-gradient(135deg, var(--thumb-a) 0 14px, var(--thumb-b) 14px 28px)",
+          }}
+        />
+        <span className="absolute bottom-3 left-3 font-mono text-[12px] text-muted">
+          {project.thumb}
+        </span>
+        <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-accent text-[var(--accent-ink)]">
+          ↗
+        </span>
       </div>
     </a>
   );
 }
 
 export default function Projects() {
-  const headingRef = useRef<HTMLDivElement>(null);
-  const [headingVisible, setHeadingVisible] = useState(false);
-
-  useEffect(() => {
-    const el = headingRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHeadingVisible(true);
-          observer.unobserve(el);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section id="projects" className="py-24 px-6 bg-zinc-50 dark:bg-zinc-900">
-      <div className="max-w-5xl mx-auto">
-        <div
-          ref={headingRef}
-          className={`mb-12 transition-all duration-700 ease-out ${
-            headingVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
+    <section id="projects" className="px-6 py-24">
+      <div className="mx-auto max-w-[1240px]">
+        <SectionMarker number="02" label="Selected Work" />
+        <h2
+          className="mb-6 font-grotesk font-bold tracking-[-0.02em]"
+          style={{ fontSize: "clamp(2.2rem, 5vw, 4rem)" }}
         >
-          <p className="text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-widest text-sm mb-3">
-            Work
-          </p>
-          <h2 className="text-4xl font-bold text-zinc-900 dark:text-white">
-            Featured Projects
-          </h2>
-        </div>
+          Featured Projects
+        </h2>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="border-b border-border">
           {projects.map((project, i) => (
-            <ProjectCard key={project.title} project={project} delay={i * 120} />
+            <ProjectRow key={project.title} project={project} index={i} />
           ))}
         </div>
       </div>

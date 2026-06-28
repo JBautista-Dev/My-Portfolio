@@ -29,7 +29,7 @@ export default function ParallaxHero() {
   return (
     <section
       id="home"
-      className="relative overflow-hidden px-6 pt-36 pb-20 md:pt-44 md:pb-28"
+      className="relative overflow-hidden px-6 pt-36 pb-12 md:pt-44 md:pb-16"
     >
       {/* Background glow */}
       <div

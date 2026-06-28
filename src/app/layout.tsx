@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   title: "Joshua Bautista | Web Developer",
   description:
     "Full-Stack Developer crafting modern, performant web applications with Next.js, TypeScript, and HubSpot CMS.",
+  icons: {
+    icon: "/favicon-48.png",
+  },
 };
 
 export default function RootLayout({

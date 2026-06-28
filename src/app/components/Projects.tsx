@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import SectionMarker from "./SectionMarker";
 import { useReveal } from "./useReveal";
 
@@ -8,6 +9,8 @@ type Project = {
   tags: string[];
   href: string;
   thumb: string;
+  logo: string;
+  contain?: boolean;
 };
 
 const projects: Project[] = [
@@ -18,6 +21,7 @@ const projects: Project[] = [
     tags: ["HubSpot", "HubDB", "HubL"],
     href: "https://www.maya.ph/",
     thumb: "→ maya.ph",
+    logo: "/Mayalogo.png",
   },
   {
     title: "Maya Bank",
@@ -26,6 +30,7 @@ const projects: Project[] = [
     tags: ["WordPress", "PHP", "HubDB"],
     href: "https://www.mayabank.ph/",
     thumb: "→ mayabank.ph",
+    logo: "/Maya-Bank-logo.jpg",
   },
   {
     title: "Portfolio Website",
@@ -34,6 +39,8 @@ const projects: Project[] = [
     tags: ["Next.js", "TypeScript", "Tailwind CSS"],
     href: "#",
     thumb: "→ portfolio",
+    logo: "/logo-block-dark.png",
+    contain: true,
   },
 ];
 
@@ -83,12 +90,17 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
 
       {/* Thumbnail */}
       <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-border">
-        <div
-          className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.07]"
-          style={{
-            background:
-              "repeating-linear-gradient(135deg, var(--thumb-a) 0 14px, var(--thumb-b) 14px 28px)",
-          }}
+        {project.contain && (
+          <div className="absolute inset-0 bg-black" />
+        )}
+        <Image
+          src={project.logo}
+          alt={`${project.title} logo`}
+          fill
+          sizes="(max-width: 768px) 100vw, 320px"
+          className={`transition-transform duration-500 group-hover:scale-[1.07] ${
+            project.contain ? "object-contain p-8" : "object-cover"
+          }`}
         />
         <span className="absolute bottom-3 left-3 font-mono text-[12px] text-muted">
           {project.thumb}

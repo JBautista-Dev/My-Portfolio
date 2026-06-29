@@ -128,7 +128,7 @@ section[id] {
 }
 
 .animate-marquee {
-  animation: marquee 30s linear infinite;
+  animation: marquee 90s linear infinite;
 }
 
 /* Hero reveal — animates in on mount with a per-element delay (--d) */

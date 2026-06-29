@@ -20,8 +20,14 @@ export const metadata: Metadata = {
   title: "Joshua Bautista | Web Developer",
   description:
     "Full-Stack Developer crafting modern, performant web applications with Next.js, TypeScript, and HubSpot CMS.",
+  metadataBase: new URL("https://bauworks.space"),
   icons: {
-    icon: "/favicon-48.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-48.png", type: "image/png", sizes: "48x48" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/favicon-48.png",
   },
 };
 

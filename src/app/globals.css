@@ -29,6 +29,13 @@
   --solid-ink: #0a0a0b;
 }
 
+/* Both backgrounds, readable from either theme — the switch animation needs
+   the *other* theme's colour while the current one is still applied. */
+:root {
+  --bg-dark: #0a0a0b;
+  --bg-light: #f4f4f1;
+}
+
 [data-theme="light"] {
   --bg: #f4f4f1;
   --text: #18181b;
@@ -159,65 +166,15 @@ section[id] {
   transform: translateY(0);
 }
 
-/* Theme switch — the incoming theme is revealed by a circle expanding from
-   the toggle button. Coordinates/radius are set inline by applyTheme(). */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-/* Switching TO light — the new theme spreads out of the button, so the
-   incoming snapshot sits on top and its circle grows from zero. */
-:root[data-theme-anim="expand"]::view-transition-old(root) {
-  z-index: 1;
-}
-:root[data-theme-anim="expand"]::view-transition-new(root) {
-  z-index: 2;
-  animation: theme-expand 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-
-/* Switching TO dark — the old light theme is sucked back into the button,
-   so the OUTGOING snapshot sits on top and its circle shrinks to zero,
-   uncovering the already-dark page underneath. */
-:root[data-theme-anim="collapse"]::view-transition-new(root) {
-  z-index: 1;
-}
-:root[data-theme-anim="collapse"]::view-transition-old(root) {
-  z-index: 2;
-  /* `both` matters: without a fill mode the clip-path snaps back to unclipped
-     when the animation ends, flashing the old light page before teardown. */
-  animation: theme-collapse 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-
-@keyframes theme-expand {
-  from {
-    clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%));
-  }
-  to {
-    clip-path: circle(
-      var(--theme-r, 150vmax) at var(--theme-x, 50%) var(--theme-y, 50%)
-    );
-  }
-}
-@keyframes theme-collapse {
-  from {
-    clip-path: circle(
-      var(--theme-r, 150vmax) at var(--theme-x, 50%) var(--theme-y, 50%)
-    );
-  }
-  to {
-    clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%));
-  }
-}
-
-/* Blur effects are re-rasterized into both view-transition snapshots, which
-   stalls the start of the animation on mobile GPUs. Drop them mid-switch —
-   they're decorative and the swap is too fast to notice them missing. */
-:root[data-theme-anim] .backdrop-blur-md {
-  backdrop-filter: none !important;
-}
-:root[data-theme-anim] .blur-\[120px\] {
-  filter: none !important;
+/* Theme switch — a solid disc scales out of (or back into) the toggle button.
+   Positioned and sized inline by applyTheme(); scaling a real element keeps
+   the geometry under our control, unlike view-transition snapshots. */
+.theme-disc {
+  position: fixed;
+  z-index: 55;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
 }
 
 /* Mobile burger — three bars that cross into an X when open. */
@@ -256,14 +213,6 @@ section[id] {
 }
 .theme-toggle {
   transition: transform 0.15s ease, color 0.2s ease, border-color 0.2s ease;
-  /* Lift the button out of the root snapshot so it isn't clipped by the
-     reveal — it stays live while the page transitions around it. */
-  view-transition-name: theme-toggle-button;
-}
-::view-transition-old(theme-toggle-button),
-::view-transition-new(theme-toggle-button) {
-  animation: none;
-  mix-blend-mode: normal;
 }
 .theme-toggle:active {
   transform: scale(0.92);

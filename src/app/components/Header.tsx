@@ -114,6 +114,10 @@ export default function Header() {
 
         const x = btn.x + btn.w / 2;
         const y = btn.y + btn.h / 2;
+        if (!(box.w > 0) || !(box.h > 0)) {
+          root.dataset.themeAnim = "expand";
+          return;
+        }
 
         // Both directions do the same thing: the incoming theme spreads out of
         // the button. That means clipping the INCOMING snapshot, which fills
@@ -123,14 +127,29 @@ export default function Header() {
         // capture and now and the circle lands off the button vertically.)
         root.dataset.themeAnim = "expand";
 
-        // Reach the far corner from wherever the button sits.
-        const r = Math.hypot(Math.max(x, box.w - x), Math.max(y, box.h - y));
-        const at = `at ${x}px ${y}px`;
+        // Everything below is a RATIO of the root box, never a pixel count.
+        // The lengths the groups report and the box the clip-path resolves
+        // against are not guaranteed to share a scale — on mobile Chrome they
+        // differ by a constant factor, which put the circle at roughly a third
+        // of the way to the button. Percentages divide that factor out, so the
+        // circle lands on the button whatever the two spaces measure in.
+        const xPct = (x / box.w) * 100;
+        const yPct = (y / box.h) * 100;
+        const at = `at ${xPct}% ${yPct}%`;
+
+        // Reach the far corner from wherever the button sits — as a percentage,
+        // which for a circle's radius resolves against sqrt(w² + h²) / sqrt(2).
+        const reach = Math.hypot(
+          Math.max(x, box.w - x),
+          Math.max(y, box.h - y)
+        );
+        const ref = Math.hypot(box.w, box.h) / Math.SQRT2;
+        const r = (reach / ref) * 100;
 
         // Driven from JS rather than a CSS keyframe because the values only
         // exist now, one step after the transition started.
         root.animate(
-          { clipPath: [`circle(0px ${at})`, `circle(${r}px ${at})`] },
+          { clipPath: [`circle(0% ${at})`, `circle(${r}% ${at})`] },
           {
             duration: 550,
             easing: "cubic-bezier(0.4, 0, 0.2, 1)",

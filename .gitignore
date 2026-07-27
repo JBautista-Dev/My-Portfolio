@@ -24,6 +24,10 @@
 .DS_Store
 *.pem
 
+# local screen recordings / debug captures
+*.mp4
+*.mov
+
 # debug
 npm-debug.log*
 yarn-debug.log*

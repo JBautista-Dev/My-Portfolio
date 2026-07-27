@@ -80,9 +80,15 @@ export default function Header() {
         Math.max(origin.x, vw - origin.x),
         Math.max(origin.y, vh - origin.y)
       ) * 1.05;
-    root.style.setProperty("--theme-x", `${origin.x}px`);
-    root.style.setProperty("--theme-y", `${origin.y}px`);
-    root.style.setProperty("--theme-r", `${radius}px`);
+    // Percentages, not pixels. Chrome resolves the snapshot's clip-path in a
+    // different pixel space than getBoundingClientRect() reports, which put
+    // the circle nowhere near the button; percentages scale with whatever box
+    // the browser picks. Per spec a percentage radius resolves against
+    // hypot(w, h) / sqrt(2), so convert through that.
+    const refSize = Math.hypot(vw, vh) / Math.SQRT2;
+    root.style.setProperty("--theme-x", `${(origin.x / vw) * 100}%`);
+    root.style.setProperty("--theme-y", `${(origin.y / vh) * 100}%`);
+    root.style.setProperty("--theme-r", `${(radius / refSize) * 100}%`);
 
     // Going light: the new theme spreads out of the button.
     // Going dark: the old light theme is sucked back into it.

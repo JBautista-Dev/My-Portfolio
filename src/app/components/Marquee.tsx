@@ -1,9 +1,10 @@
 const items = [
-  "Full-Stack Developer",
+  "HubSpot & WordPress Developer",
   "HubSpot CMS",
-  "Next.js",
+  "HubL",
+  "HubDB",
   "WordPress",
-  "TypeScript",
+  "PHP",
   "Clean Code",
 ];
 

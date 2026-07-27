@@ -19,7 +19,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Joshua Bautista | Web Developer",
   description:
-    "Full-Stack Developer crafting modern, performant web applications with Next.js, TypeScript, and HubSpot CMS.",
+    "HubSpot CMS and WordPress developer specializing in HubL modules, HubDB-driven content, and clean, responsive front-end work.",
   metadataBase: new URL("https://bauworks.space"),
   icons: {
     icon: [

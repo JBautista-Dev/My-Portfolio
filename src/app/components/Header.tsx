@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { flushSync } from "react-dom";
 import Logo from "./Logo";
 
 const navLinks = [
@@ -34,15 +35,53 @@ export default function Header() {
     return () => observer.disconnect();
   }, []);
 
-  const applyTheme = (next: Theme) => {
-    setTheme(next);
-    document.documentElement.setAttribute("data-theme", next);
-    try {
-      localStorage.setItem("theme", next);
-    } catch {}
+  const applyTheme = (next: Theme, origin?: { x: number; y: number }) => {
+    // flushSync so React's re-render lands in the same frame as the attribute
+    // change — otherwise the new snapshot is captured before the icon updates
+    // and the difference shows up as a flicker mid-transition.
+    const commit = () => {
+      flushSync(() => {
+        setTheme(next);
+        document.documentElement.setAttribute("data-theme", next);
+      });
+      try {
+        localStorage.setItem("theme", next);
+      } catch {}
+    };
+
+    const root = document.documentElement;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    // Circular reveal: the incoming theme expands from the toggle button.
+    // Needs View Transitions; anything else just swaps instantly.
+    if (!origin || reduced || !document.startViewTransition) {
+      commit();
+      return;
+    }
+
+    // Radius must reach the farthest corner so the circle covers the viewport.
+    const radius = Math.hypot(
+      Math.max(origin.x, window.innerWidth - origin.x),
+      Math.max(origin.y, window.innerHeight - origin.y)
+    );
+    root.style.setProperty("--theme-x", `${origin.x}px`);
+    root.style.setProperty("--theme-y", `${origin.y}px`);
+    root.style.setProperty("--theme-r", `${radius}px`);
+
+    // Going light: the new theme spreads out of the button.
+    // Going dark: the old light theme is sucked back into it.
+    root.dataset.themeAnim = next === "light" ? "expand" : "collapse";
+
+    const transition = document.startViewTransition(commit);
+    transition.finished.finally(() => {
+      delete root.dataset.themeAnim;
+    });
   };
 
   return (
+    <>
     <header className="fixed top-0 left-0 z-50 w-full border-b border-border backdrop-blur-md bg-[var(--nav-bg)]">
       <div className="mx-auto flex max-w-[1240px] items-center justify-between px-6 py-4">
         <a href="#home" aria-label="bauworks home" className="flex items-center">
@@ -68,9 +107,6 @@ export default function Header() {
             </a>
           ))}
 
-          {/* Segmented theme toggle */}
-          <ThemeToggle theme={theme} onChange={applyTheme} />
-
           <a
             href="mailto:joshuabautista0531@gmail.com"
             className="rounded-md bg-[var(--solid)] px-3.5 py-2 text-[var(--solid-ink)] transition-colors hover:bg-accent hover:text-[var(--accent-ink)]"
@@ -80,16 +116,19 @@ export default function Header() {
         </nav>
 
         {/* Mobile controls */}
-        <div className="flex items-center gap-3 md:hidden">
-          <ThemeToggle theme={theme} onChange={applyTheme} />
+        <div className="flex items-center md:hidden">
           <button
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
+            aria-controls="mobile-nav"
             onClick={() => setOpen((p) => !p)}
-            className="font-mono text-[12px] uppercase tracking-[0.15em] text-text"
+            className={`burger ${open ? "is-open" : ""} -mr-2 flex h-10 w-10 flex-col items-center justify-center gap-[5px] text-text`}
           >
-            {open ? "Close" : "Menu"}
+            {/* Three bars; the outer two cross into an X, the middle fades. */}
+            <span className="burger-bar" />
+            <span className="burger-bar" />
+            <span className="burger-bar" />
           </button>
         </div>
       </div>
@@ -97,6 +136,7 @@ export default function Header() {
       {/* Mobile menu */}
       {open && (
         <nav
+          id="mobile-nav"
           aria-label="Mobile navigation"
           className="flex flex-col gap-4 border-t border-border bg-[var(--nav-bg)] px-6 py-5 font-mono text-[13px] uppercase tracking-[0.15em] md:hidden"
         >
@@ -120,6 +160,47 @@ export default function Header() {
         </nav>
       )}
     </header>
+
+    {/* Floating theme toggle — fixed lower-right, above page content. */}
+    <div className="fixed bottom-6 right-6 z-50">
+      <ThemeToggle theme={theme} onChange={applyTheme} />
+    </div>
+    </>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-[22px] w-[22px]"
+      aria-hidden="true"
+    >
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
+    </svg>
+  );
+}
+
+function SunIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-[22px] w-[22px]"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </svg>
   );
 }
 
@@ -128,25 +209,34 @@ function ThemeToggle({
   onChange,
 }: {
   theme: Theme;
-  onChange: (t: Theme) => void;
+  onChange: (t: Theme, origin?: { x: number; y: number }) => void;
 }) {
+  const next: Theme = theme === "dark" ? "light" : "dark";
+  const label = `Switch to ${next} mode`;
+
   return (
-    <div className="flex items-center rounded-md border border-border-soft p-0.5 font-mono text-[10px] uppercase tracking-[0.15em]">
-      {(["dark", "light"] as Theme[]).map((t) => (
-        <button
-          key={t}
-          type="button"
-          onClick={() => onChange(t)}
-          aria-pressed={theme === t}
-          className={`rounded-[5px] px-2.5 py-1 transition-colors ${
-            theme === t
-              ? "bg-accent text-[var(--accent-ink)]"
-              : "text-dim hover:text-text"
-          }`}
-        >
-          {t}
-        </button>
-      ))}
-    </div>
+    <button
+      type="button"
+      onClick={(e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        onChange(next, { x: r.left + r.width / 2, y: r.top + r.height / 2 });
+      }}
+      aria-label={label}
+      title={label}
+      className="theme-toggle relative flex h-14 w-14 items-center justify-center rounded-full border border-border-strong bg-[var(--solid)] text-[var(--solid-ink)] shadow-lg hover:border-[var(--accent-text)]"
+    >
+      {/* Icons stack and show the theme you'd switch TO, matching the label:
+          sun while dark, moon while light. Inactive one rotates and fades. */}
+      <span
+        className={`theme-toggle-icon ${theme === "dark" ? "is-active" : ""}`}
+      >
+        <SunIcon />
+      </span>
+      <span
+        className={`theme-toggle-icon ${theme === "light" ? "is-active" : ""}`}
+      >
+        <MoonIcon />
+      </span>
+    </button>
   );
 }

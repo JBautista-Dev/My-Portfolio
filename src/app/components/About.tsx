@@ -2,16 +2,23 @@
 import SectionMarker from "./SectionMarker";
 import { useReveal } from "./useReveal";
 
-const skills = [
+const coreSkills = [
   "HubSpot CMS",
   "HubDB",
   "HubL",
   "WordPress",
   "PHP",
-  "TypeScript",
-  "Next.js",
-  "Tailwind CSS",
+  "HTML",
+  "CSS",
+  "JavaScript",
   "Git",
+];
+
+const workingKnowledgeSkills = [
+  "Tailwind CSS",
+  "React",
+  "Next.js",
+  "TypeScript",
 ];
 
 export default function About() {
@@ -35,29 +42,61 @@ export default function About() {
 
           <div>
             <p className="text-[1.15rem] leading-[1.7] text-muted">
-              I&apos;m a passionate full-stack developer who loves turning ideas
-              into reality through code. I specialize in building web
-              applications that are fast, accessible, and delightful to use.
+              I&apos;m a web developer specializing in HubSpot CMS and WordPress.
+              I build and maintain sites for Maya&apos;s business units — working
+              with HubL modules, HubDB schema design, and editor-friendly page
+              templates that let content teams manage their own pages without
+              touching code.
             </p>
             <p className="mt-5 text-[1.05rem] leading-[1.7] text-dim">
-              When I&apos;m not coding, I enjoy exploring new technologies,
-              contributing to open source, and continuously growing as a
-              developer.
+              I&apos;m strongest on the CMS and front-end side (HTML, CSS,
+              JavaScript), and I&apos;m actively expanding into React, Next.js,
+              and TypeScript through personal projects — including this
+              portfolio, which I built with Next.js and Tailwind. I care about
+              clean, maintainable code and building things that are genuinely
+              easy to use.
             </p>
           </div>
         </div>
 
         <div className="mt-16">
-          <h3 className="font-mono text-[12px] uppercase tracking-[0.2em] text-dim">
-            Technologies I Work With
-          </h3>
+          <div className="flex items-baseline gap-3">
+            <h3 className="font-mono text-[12px] uppercase tracking-[0.2em] text-dim">
+              Core Stack
+            </h3>
+            <span className="font-mono text-[11px] text-faint">
+              day-to-day, production work
+            </span>
+          </div>
           <div className="mt-6 flex flex-wrap gap-3">
-            {skills.map((skill) => (
+            {coreSkills.map((skill) => (
               <span
                 key={skill}
                 className="group flex items-center gap-2 rounded-full border border-border-soft px-4 py-2 font-mono text-[12px] text-muted transition-colors hover:border-[var(--accent-text)] hover:text-[var(--accent-text)]"
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-10">
+          <div className="flex items-baseline gap-3">
+            <h3 className="font-mono text-[12px] uppercase tracking-[0.2em] text-dim">
+              Working Knowledge
+            </h3>
+            <span className="font-mono text-[11px] text-faint">
+              built real projects with these — including this site
+            </span>
+          </div>
+          <div className="mt-6 flex flex-wrap gap-3">
+            {workingKnowledgeSkills.map((skill) => (
+              <span
+                key={skill}
+                className="group flex items-center gap-2 rounded-full border border-border-soft px-4 py-2 font-mono text-[12px] text-dim transition-colors hover:border-[var(--accent-text)] hover:text-[var(--accent-text)]"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-accent opacity-50" />
                 {skill}
               </span>
             ))}

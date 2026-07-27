@@ -46,7 +46,7 @@ export default function ParallaxHero() {
             className="reveal-hero font-mono text-[12px] uppercase tracking-[0.2em] text-[var(--accent-text)]"
             style={{ "--d": "80ms" } as CSSProperties}
           >
-            → Web Developer
+            → HubSpot CMS &amp; WordPress Developer
           </p>
           <h1
             className="reveal-hero mt-6 font-grotesk font-bold leading-[0.92] tracking-[-0.03em]"
@@ -66,8 +66,8 @@ export default function ParallaxHero() {
             className="reveal-hero mt-7 max-w-md text-[1.15rem] leading-[1.6] text-muted"
             style={{ "--d": "240ms" } as CSSProperties}
           >
-            I build modern, performant web applications with clean code and great
-            user experiences.
+            I build and maintain HubSpot CMS and WordPress sites — HubL modules,
+            HubDB-driven content, and clean, responsive front-end work.
           </p>
           <div
             className="reveal-hero mt-9 flex flex-wrap gap-4"
@@ -115,14 +115,14 @@ export default function ParallaxHero() {
                 <span className="text-[var(--accent-text)]">$</span>{" "}
                 <span className="text-text">whoami</span>
                 <div className="mt-1 text-dim">
-                  Joshua Bautista — Full-Stack Developer
+                  Joshua Bautista — HubSpot CMS &amp; WordPress Developer
                 </div>
               </div>
               <div>
                 <span className="text-[var(--accent-text)]">$</span>{" "}
                 <span className="text-text">stack --list</span>
                 <div className="mt-1 text-dim">
-                  next.js · typescript · hubspot · wordpress · php
+                  hubspot · hubl · hubdb · wordpress · php · javascript
                 </div>
               </div>
               <div>

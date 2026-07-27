@@ -15,6 +15,15 @@ type Project = {
 
 const projects: Project[] = [
   {
+    title: "Maya Deals & Promos",
+    description:
+      "Built the deals/promos system on maya.ph/deals — a custom HubL listing module querying a HubDB table via hubdb_table_rows() with category filters, expiry-based sorting, and an 'ending soon' view, plus the CMS page template behind every deal detail page so the content team creates promos without developer involvement.",
+    tags: ["HubSpot", "HubL", "HubDB"],
+    href: "https://www.maya.ph/deals",
+    thumb: "→ maya.ph/deals",
+    logo: "/Mayalogo.png",
+  },
+  {
     title: "Maya",
     description:
       "Ongoing HubSpot CMS maintenance across maya.ph, maya.ph/center, and maya.ph/business — building modules, updating HubDB-driven content, and keeping the marketing, help center, and business sites consistent.",
@@ -37,7 +46,7 @@ const projects: Project[] = [
     description:
       "A modern, responsive portfolio built with Next.js and Tailwind CSS featuring parallax scrolling and smooth scroll-reveal animations.",
     tags: ["Next.js", "TypeScript", "Tailwind CSS"],
-    href: "#",
+    href: "https://github.com/JBautista-Dev/My-Portfolio",
     thumb: "→ portfolio",
     logo: "/logo-block-dark.png",
     contain: true,

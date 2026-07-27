@@ -159,10 +159,114 @@ section[id] {
   transform: translateY(0);
 }
 
+/* Theme switch — the incoming theme is revealed by a circle expanding from
+   the toggle button. Coordinates/radius are set inline by applyTheme(). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+/* Switching TO light — the new theme spreads out of the button, so the
+   incoming snapshot sits on top and its circle grows from zero. */
+:root[data-theme-anim="expand"]::view-transition-old(root) {
+  z-index: 1;
+}
+:root[data-theme-anim="expand"]::view-transition-new(root) {
+  z-index: 2;
+  animation: theme-expand 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* Switching TO dark — the old light theme is sucked back into the button,
+   so the OUTGOING snapshot sits on top and its circle shrinks to zero,
+   uncovering the already-dark page underneath. */
+:root[data-theme-anim="collapse"]::view-transition-new(root) {
+  z-index: 1;
+}
+:root[data-theme-anim="collapse"]::view-transition-old(root) {
+  z-index: 2;
+  /* `both` matters: without a fill mode the clip-path snaps back to unclipped
+     when the animation ends, flashing the old light page before teardown. */
+  animation: theme-collapse 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes theme-expand {
+  from {
+    clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%));
+  }
+  to {
+    clip-path: circle(
+      var(--theme-r, 150vmax) at var(--theme-x, 50%) var(--theme-y, 50%)
+    );
+  }
+}
+@keyframes theme-collapse {
+  from {
+    clip-path: circle(
+      var(--theme-r, 150vmax) at var(--theme-x, 50%) var(--theme-y, 50%)
+    );
+  }
+  to {
+    clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%));
+  }
+}
+
+/* Mobile burger — three bars that cross into an X when open. */
+.burger-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+}
+/* 7px = bar height (2px) + gap (5px), so each end bar lands on the centre. */
+.burger.is-open .burger-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.burger.is-open .burger-bar:nth-child(2) {
+  opacity: 0;
+}
+.burger.is-open .burger-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Theme toggle — single round button; icons swap with a rotate + fade. */
+.theme-toggle-icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  transform: rotate(-90deg) scale(0.4);
+  opacity: 0;
+}
+.theme-toggle-icon.is-active {
+  transform: rotate(0deg) scale(1);
+  opacity: 1;
+}
+.theme-toggle {
+  transition: transform 0.15s ease, color 0.2s ease, border-color 0.2s ease;
+  /* Lift the button out of the root snapshot so it isn't clipped by the
+     reveal — it stays live while the page transitions around it. */
+  view-transition-name: theme-toggle-button;
+}
+::view-transition-old(theme-toggle-button),
+::view-transition-new(theme-toggle-button) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+.theme-toggle:active {
+  transform: scale(0.92);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee,
   .cursor-blink {
     animation: none !important;
+  }
+  .theme-toggle-icon,
+  .burger-bar {
+    transition: none !important;
   }
   .reveal-hero {
     opacity: 1 !important;

@@ -159,7 +159,7 @@ export default function Contact() {
               GitHub
             </a>
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/joshua-bautista-8521aa278/"
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-md border border-border-strong px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.1em] text-muted transition-colors hover:border-[var(--accent-text)] hover:text-[var(--accent-text)]"

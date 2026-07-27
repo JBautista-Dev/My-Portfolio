@@ -76,14 +76,19 @@ export default function Header() {
         Math.max(origin.x, reachW - origin.x),
         Math.max(origin.y, reachH - origin.y)
       ) * 1.05;
-    // Percentages, not pixels. Chrome resolves the snapshot's clip-path in a
-    // different pixel space than getBoundingClientRect() reports, which put
-    // the circle nowhere near the button; percentages scale with whatever box
-    // the browser picks. Per spec a percentage radius resolves against
-    // hypot(w, h) / sqrt(2), so convert through that.
+    // Anchor to the bottom-right EDGES rather than measuring a position.
+    // Browsers disagree on which box the snapshot's clip-path resolves
+    // against (Chrome and Brave each got it wrong in different directions),
+    // but 100% is always that box's right/bottom edge — and the button is
+    // fixed to those same edges, so calc(100% - inset) lands on it either way.
+    const insetRight = vw - origin.x;
+    const insetBottom = vh - origin.y;
+    root.style.setProperty("--theme-x", `calc(100% - ${insetRight}px)`);
+    root.style.setProperty("--theme-y", `calc(100% - ${insetBottom}px)`);
+
+    // Radius stays a percentage: per spec it resolves against
+    // hypot(w, h) / sqrt(2), so it scales with the box instead of guessing.
     const refSize = Math.hypot(vw, vh) / Math.SQRT2;
-    root.style.setProperty("--theme-x", `${(origin.x / vw) * 100}%`);
-    root.style.setProperty("--theme-y", `${(origin.y / vh) * 100}%`);
     root.style.setProperty("--theme-r", `${(radius / refSize) * 100}%`);
 
     // Going light: the new theme spreads out of the button.

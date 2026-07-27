@@ -210,6 +210,16 @@ section[id] {
   }
 }
 
+/* Blur effects are re-rasterized into both view-transition snapshots, which
+   stalls the start of the animation on mobile GPUs. Drop them mid-switch —
+   they're decorative and the swap is too fast to notice them missing. */
+:root[data-theme-anim] .backdrop-blur-md {
+  backdrop-filter: none !important;
+}
+:root[data-theme-anim] .blur-\[120px\] {
+  filter: none !important;
+}
+
 /* Mobile burger — three bars that cross into an X when open. */
 .burger-bar {
   display: block;

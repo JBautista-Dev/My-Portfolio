@@ -163,60 +163,39 @@ section[id] {
   transform: translateY(0);
 }
 
-/* Theme switch — the incoming theme is revealed by a circle expanding from
-   the toggle button. Coordinates/radius are set inline by applyTheme(). */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
+/* Theme switch — a circle filled with the incoming theme's background grows
+   out of the toggle button, the theme is committed underneath it, then the
+   circle fades away. Element and geometry are created by applyTheme().
+
+   This used to run on View Transitions. The clip-path of a ::view-transition
+   snapshot resolves against the *snapshot containing block*, which mobile
+   browsers size to include the retractable URL bar — so coordinates taken
+   from getBoundingClientRect() (layout viewport) landed the circle off the
+   button on real phones, and the two stacked snapshots flickered. A plain
+   fixed overlay shares the button's coordinate space on every browser. */
+.theme-reveal {
+  position: fixed;
+  inset: 0;
+  /* Above every fixed layer on the page (header and toggle are z-50) except
+     the toggle itself, which is lifted over it so it stays visible. */
+  z-index: 2147483646;
+  pointer-events: none;
+  background: var(--bg);
+  /* data-theme on the overlay pulls the INCOMING theme's tokens, since the
+     token blocks are plain [data-theme=...] attribute selectors. */
 }
-/* Switching TO light — the new theme spreads out of the button, so the
-   incoming snapshot sits on top and its circle grows from zero. */
-:root[data-theme-anim="expand"]::view-transition-old(root) {
-  z-index: 1;
-}
-:root[data-theme-anim="expand"]::view-transition-new(root) {
-  z-index: 2;
-  animation: theme-expand 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+.theme-reveal.is-fading {
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
 }
 
-/* Switching TO dark — the old light theme is sucked back into the button,
-   so the OUTGOING snapshot sits on top and its circle shrinks to zero,
-   uncovering the already-dark page underneath. */
-:root[data-theme-anim="collapse"]::view-transition-new(root) {
-  z-index: 1;
-}
-:root[data-theme-anim="collapse"]::view-transition-old(root) {
-  z-index: 2;
-  /* `both` matters: without a fill mode the clip-path snaps back to unclipped
-     when the animation ends, flashing the old light page before teardown. */
-  animation: theme-collapse 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+/* The toggle sits above the overlay so it never blinks out mid-switch. */
+.theme-toggle-layer {
+  z-index: 2147483647;
 }
 
-@keyframes theme-expand {
-  from {
-    clip-path: circle(0% at var(--theme-x, 50%) var(--theme-y, 50%));
-  }
-  to {
-    clip-path: circle(
-      var(--theme-r, 150%) at var(--theme-x, 50%) var(--theme-y, 50%)
-    );
-  }
-}
-@keyframes theme-collapse {
-  from {
-    clip-path: circle(
-      var(--theme-r, 150%) at var(--theme-x, 50%) var(--theme-y, 50%)
-    );
-  }
-  to {
-    clip-path: circle(0% at var(--theme-x, 50%) var(--theme-y, 50%));
-  }
-}
-
-/* Blur effects are re-rasterized into both view-transition snapshots, which
-   stalls the start of the animation on mobile GPUs. Drop them mid-switch —
-   they're decorative and the swap is too fast to notice them missing. */
+/* Blur is expensive to re-rasterize while a full-screen overlay animates on
+   mobile GPUs. Drop it mid-switch — it's decorative and the swap is fast. */
 :root[data-theme-anim] .backdrop-blur-md {
   backdrop-filter: none !important;
 }
@@ -257,14 +236,6 @@ section[id] {
 }
 .theme-toggle {
   transition: transform 0.15s ease, color 0.2s ease, border-color 0.2s ease;
-  /* Lift the button out of the root snapshot so it isn't clipped by the
-     reveal — it stays live while the page transitions around it. */
-  view-transition-name: theme-toggle-button;
-}
-::view-transition-old(theme-toggle-button),
-::view-transition-new(theme-toggle-button) {
-  animation: none;
-  mix-blend-mode: normal;
 }
 .theme-toggle:active {
   transform: scale(0.92);

@@ -13,6 +13,9 @@ type Theme = "dark" | "light";
 
 export default function Header() {
   const [theme, setTheme] = useState<Theme>("dark");
+  // Set for the length of the reveal. The button sits above the overlay, so it
+  // renders the incoming theme right away instead of flipping 0.55s late.
+  const [pending, setPending] = useState<Theme | null>(null);
   const [active, setActive] = useState<string>("");
   const [open, setOpen] = useState(false);
 
@@ -54,51 +57,77 @@ export default function Header() {
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    // Circular reveal: the incoming theme expands from the toggle button.
-    // Needs View Transitions; anything else just swaps instantly.
-    if (!origin || reduced || !document.startViewTransition) {
+    // Circular reveal: a circle of the incoming theme grows out of the button.
+    // Needs the Web Animations API; anything else just swaps instantly.
+    if (!origin || reduced || typeof Element.prototype.animate !== "function") {
       commit();
       return;
     }
 
-    // Position uses the LAYOUT viewport — the same space getBoundingClientRect
-    // measures in — so the circle lands exactly on the button.
-    const vw = document.documentElement.clientWidth || window.innerWidth;
-    const vh = document.documentElement.clientHeight || window.innerHeight;
+    // The overlay is position:fixed, so it lives in the same coordinate space
+    // getBoundingClientRect() reports the button in — no correction needed on
+    // any browser. (The old View Transitions version had to guess at the
+    // snapshot containing block, which mobile sizes to include the URL bar.)
+    const overlay = document.createElement("div");
+    overlay.className = "theme-reveal";
+    overlay.dataset.theme = next; // pulls the incoming theme's --bg
 
-    // Radius gets a padded measure instead: mobile browsers report a shifting
+    // Radius uses a padded measure: mobile browsers report a shifting
     // innerHeight as the URL bar shows and hides, and undershooting leaves an
-    // unswept strip that snaps at the end. Keep this out of the position math.
-    const reachW = Math.max(vw, window.innerWidth, window.visualViewport?.width ?? 0);
-    const reachH = Math.max(vh, window.innerHeight, window.visualViewport?.height ?? 0);
-
-    // Everything below is px, anchored from the TOP-LEFT. Percentages here
-    // would resolve against the snapshot's containing block, which is not the
-    // layout viewport — it also covers the scrollbar on desktop and the
-    // URL-bar strip on mobile, so any `100% - inset` anchor drifts by a
-    // browser- and screen-dependent amount. The two boxes DO share a top-left
-    // origin, which is the space getBoundingClientRect already reports in, so
-    // measuring from there needs no correction at any viewport size.
-    root.style.setProperty("--theme-x", `${origin.x}px`);
-    root.style.setProperty("--theme-y", `${origin.y}px`);
-
-    // Reach the far corner from wherever the button sits, padded so the extra
-    // width/height of that larger snapshot box is swept too.
+    // unswept strip that snaps at the end.
+    const reachW = Math.max(
+      root.clientWidth,
+      window.innerWidth,
+      window.visualViewport?.width ?? 0
+    );
+    const reachH = Math.max(
+      root.clientHeight,
+      window.innerHeight,
+      window.visualViewport?.height ?? 0
+    );
     const radius =
       Math.hypot(
         Math.max(origin.x, reachW - origin.x),
         Math.max(origin.y, reachH - origin.y)
-      ) * 1.15;
-    root.style.setProperty("--theme-r", `${radius}px`);
+      ) * 1.1;
 
-    // Going light: the new theme spreads out of the button.
-    // Going dark: the old light theme is sucked back into it.
-    root.dataset.themeAnim = next === "light" ? "expand" : "collapse";
+    document.body.appendChild(overlay);
+    root.dataset.themeAnim = "";
+    setPending(next);
 
-    const transition = document.startViewTransition(commit);
-    transition.finished.finally(() => {
+    const at = `at ${origin.x}px ${origin.y}px`;
+    const grow = overlay.animate(
+      [
+        { clipPath: `circle(0px ${at})` },
+        { clipPath: `circle(${radius}px ${at})` },
+      ],
+      { duration: 550, easing: "cubic-bezier(0.4, 0, 0.2, 1)", fill: "forwards" }
+    );
+
+    const cleanup = () => {
+      overlay.remove();
       delete root.dataset.themeAnim;
-    });
+      setPending(null);
+    };
+
+    grow.finished
+      .then(() => {
+        // The overlay covers the viewport now, so the swap underneath it is
+        // invisible; fading it out reveals the new theme's content.
+        commit();
+        overlay.classList.add("is-fading");
+        return new Promise<void>((resolve) => {
+          overlay.addEventListener("transitionend", () => resolve(), {
+            once: true,
+          });
+          // transitionend can be skipped if the tab is backgrounded mid-fade.
+          window.setTimeout(resolve, 400);
+        });
+      })
+      .then(cleanup, () => {
+        commit();
+        cleanup();
+      });
   };
 
   return (
@@ -182,9 +211,17 @@ export default function Header() {
       )}
     </header>
 
-    {/* Floating theme toggle — fixed lower-right, above page content. */}
-    <div className="fixed bottom-6 right-6 z-50">
-      <ThemeToggle theme={theme} onChange={applyTheme} />
+    {/* Floating theme toggle — fixed lower-right, above page content and
+        above the reveal overlay so it stays visible during the switch. */}
+    <div
+      className="theme-toggle-layer fixed bottom-6 right-6"
+      data-theme={pending ?? undefined}
+    >
+      <ThemeToggle
+        theme={pending ?? theme}
+        busy={pending !== null}
+        onChange={applyTheme}
+      />
     </div>
     </>
   );
@@ -227,9 +264,11 @@ function SunIcon() {
 
 function ThemeToggle({
   theme,
+  busy,
   onChange,
 }: {
   theme: Theme;
+  busy: boolean;
   onChange: (t: Theme, origin?: { x: number; y: number }) => void;
 }) {
   const next: Theme = theme === "dark" ? "light" : "dark";
@@ -238,6 +277,9 @@ function ThemeToggle({
   return (
     <button
       type="button"
+      // A second click mid-reveal would start an overlaid reveal whose cleanup
+      // races the first one's.
+      disabled={busy}
       onClick={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
         onChange(next, { x: r.left + r.width / 2, y: r.top + r.height / 2 });

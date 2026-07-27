@@ -61,24 +61,20 @@ export default function Header() {
       return;
     }
 
-    // Radius must reach the farthest corner so the circle covers the viewport.
-    // Mobile browsers report a shifting innerHeight as the URL bar shows and
-    // hides, so take the largest measure available and pad it slightly —
-    // undershooting leaves an unswept strip that snaps at the end.
-    const vw = Math.max(
-      window.innerWidth,
-      window.visualViewport?.width ?? 0,
-      document.documentElement.clientWidth
-    );
-    const vh = Math.max(
-      window.innerHeight,
-      window.visualViewport?.height ?? 0,
-      document.documentElement.clientHeight
-    );
+    // Position uses the LAYOUT viewport — the same space getBoundingClientRect
+    // measures in — so the circle lands exactly on the button.
+    const vw = document.documentElement.clientWidth || window.innerWidth;
+    const vh = document.documentElement.clientHeight || window.innerHeight;
+
+    // Radius gets a padded measure instead: mobile browsers report a shifting
+    // innerHeight as the URL bar shows and hides, and undershooting leaves an
+    // unswept strip that snaps at the end. Keep this out of the position math.
+    const reachW = Math.max(vw, window.innerWidth, window.visualViewport?.width ?? 0);
+    const reachH = Math.max(vh, window.innerHeight, window.visualViewport?.height ?? 0);
     const radius =
       Math.hypot(
-        Math.max(origin.x, vw - origin.x),
-        Math.max(origin.y, vh - origin.y)
+        Math.max(origin.x, reachW - origin.x),
+        Math.max(origin.y, reachH - origin.y)
       ) * 1.05;
     // Percentages, not pixels. Chrome resolves the snapshot's clip-path in a
     // different pixel space than getBoundingClientRect() reports, which put

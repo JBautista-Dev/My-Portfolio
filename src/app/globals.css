@@ -17,7 +17,9 @@
   --surface-soft: rgba(255, 255, 255, 0.03);
   --panel-a: #141416;
   --panel-b: #0e0e10;
-  --nav-bg: rgba(10, 10, 11, 0.55);
+  /* Opaque enough that scrolling text stays hidden when mobile browsers drop
+     backdrop-filter mid-scroll. */
+  --nav-bg: rgba(10, 10, 11, 0.85);
   --grid-line: rgba(255, 255, 255, 0.025);
   --glow: rgba(31, 184, 90, 0.12);
   --thumb-a: #16161a;
@@ -42,9 +44,11 @@
   --surface-soft: rgba(0, 0, 0, 0.045);
   --panel-a: #ffffff;
   --panel-b: #f0f0ec;
-  --nav-bg: rgba(244, 244, 241, 0.65);
+  --nav-bg: rgba(244, 244, 241, 0.9);
   --grid-line: rgba(0, 0, 0, 0.045);
-  --glow: rgba(31, 184, 90, 0.16);
+  /* Much lower than dark mode: the same green over a light background reads
+     as a green wash across the whole banner rather than a soft glow. */
+  --glow: rgba(31, 184, 90, 0.07);
   --thumb-a: #e7e7e2;
   --thumb-b: #efefea;
   --accent: #1fb85a;

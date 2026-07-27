@@ -71,25 +71,25 @@ export default function Header() {
     // unswept strip that snaps at the end. Keep this out of the position math.
     const reachW = Math.max(vw, window.innerWidth, window.visualViewport?.width ?? 0);
     const reachH = Math.max(vh, window.innerHeight, window.visualViewport?.height ?? 0);
+
+    // Everything below is px, anchored from the TOP-LEFT. Percentages here
+    // would resolve against the snapshot's containing block, which is not the
+    // layout viewport — it also covers the scrollbar on desktop and the
+    // URL-bar strip on mobile, so any `100% - inset` anchor drifts by a
+    // browser- and screen-dependent amount. The two boxes DO share a top-left
+    // origin, which is the space getBoundingClientRect already reports in, so
+    // measuring from there needs no correction at any viewport size.
+    root.style.setProperty("--theme-x", `${origin.x}px`);
+    root.style.setProperty("--theme-y", `${origin.y}px`);
+
+    // Reach the far corner from wherever the button sits, padded so the extra
+    // width/height of that larger snapshot box is swept too.
     const radius =
       Math.hypot(
         Math.max(origin.x, reachW - origin.x),
         Math.max(origin.y, reachH - origin.y)
-      ) * 1.05;
-    // Anchor to the bottom-right EDGES rather than measuring a position.
-    // Browsers disagree on which box the snapshot's clip-path resolves
-    // against (Chrome and Brave each got it wrong in different directions),
-    // but 100% is always that box's right/bottom edge — and the button is
-    // fixed to those same edges, so calc(100% - inset) lands on it either way.
-    const insetRight = vw - origin.x;
-    const insetBottom = vh - origin.y;
-    root.style.setProperty("--theme-x", `calc(100% - ${insetRight}px)`);
-    root.style.setProperty("--theme-y", `calc(100% - ${insetBottom}px)`);
-
-    // Radius stays a percentage: per spec it resolves against
-    // hypot(w, h) / sqrt(2), so it scales with the box instead of guessing.
-    const refSize = Math.hypot(vw, vh) / Math.SQRT2;
-    root.style.setProperty("--theme-r", `${(radius / refSize) * 100}%`);
+      ) * 1.15;
+    root.style.setProperty("--theme-r", `${radius}px`);
 
     // Going light: the new theme spreads out of the button.
     // Going dark: the old light theme is sucked back into it.

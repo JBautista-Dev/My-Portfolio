@@ -62,10 +62,24 @@ export default function Header() {
     }
 
     // Radius must reach the farthest corner so the circle covers the viewport.
-    const radius = Math.hypot(
-      Math.max(origin.x, window.innerWidth - origin.x),
-      Math.max(origin.y, window.innerHeight - origin.y)
+    // Mobile browsers report a shifting innerHeight as the URL bar shows and
+    // hides, so take the largest measure available and pad it slightly —
+    // undershooting leaves an unswept strip that snaps at the end.
+    const vw = Math.max(
+      window.innerWidth,
+      window.visualViewport?.width ?? 0,
+      document.documentElement.clientWidth
     );
+    const vh = Math.max(
+      window.innerHeight,
+      window.visualViewport?.height ?? 0,
+      document.documentElement.clientHeight
+    );
+    const radius =
+      Math.hypot(
+        Math.max(origin.x, vw - origin.x),
+        Math.max(origin.y, vh - origin.y)
+      ) * 1.05;
     root.style.setProperty("--theme-x", `${origin.x}px`);
     root.style.setProperty("--theme-y", `${origin.y}px`);
     root.style.setProperty("--theme-r", `${radius}px`);

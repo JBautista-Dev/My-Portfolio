@@ -36,8 +36,9 @@ export default function Header() {
   }, []);
 
   const applyTheme = (next: Theme, origin?: { x: number; y: number }) => {
-    // flushSync so the icon re-render lands in the same frame as the attribute
-    // change, rather than a frame after the disc has already been removed.
+    // flushSync so React's re-render lands in the same frame as the attribute
+    // change — otherwise the new snapshot is captured before the icon updates
+    // and the difference shows up as a flicker mid-transition.
     const commit = () => {
       flushSync(() => {
         setTheme(next);
@@ -53,7 +54,9 @@ export default function Header() {
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    if (!origin || reduced) {
+    // Circular reveal: the incoming theme expands from the toggle button.
+    // Needs View Transitions; anything else just swaps instantly.
+    if (!origin || reduced || !document.startViewTransition) {
       commit();
       return;
     }
@@ -77,42 +80,18 @@ export default function Header() {
         Math.max(origin.x, vw - origin.x),
         Math.max(origin.y, vh - origin.y)
       ) * 1.05;
-    // The disc is always the LIGHT colour: going light it grows to become the
-    // new background; going dark it starts full-screen and shrinks away to
-    // uncover the dark page already swapped in beneath it.
-    const lightBg =
-      getComputedStyle(root).getPropertyValue("--bg-light").trim() || "#f4f4f1";
+    root.style.setProperty("--theme-x", `${origin.x}px`);
+    root.style.setProperty("--theme-y", `${origin.y}px`);
+    root.style.setProperty("--theme-r", `${radius}px`);
 
-    const disc = document.createElement("div");
-    disc.className = "theme-disc";
-    disc.style.left = `${origin.x}px`;
-    disc.style.top = `${origin.y}px`;
-    disc.style.width = `${radius * 2}px`;
-    disc.style.height = `${radius * 2}px`;
-    disc.style.marginLeft = `${-radius}px`;
-    disc.style.marginTop = `${-radius}px`;
-    disc.style.background = lightBg;
-    document.body.appendChild(disc);
+    // Going light: the new theme spreads out of the button.
+    // Going dark: the old light theme is sucked back into it.
+    root.dataset.themeAnim = next === "light" ? "expand" : "collapse";
 
-    const goingLight = next === "light";
-    // Going dark, swap first so the shrinking disc reveals the dark page.
-    if (!goingLight) commit();
-
-    const animation = disc.animate(
-      [
-        { transform: `scale(${goingLight ? 0 : 1})` },
-        { transform: `scale(${goingLight ? 1 : 0})` },
-      ],
-      { duration: 550, easing: "cubic-bezier(0.4, 0, 0.2, 1)", fill: "forwards" }
-    );
-
-    animation.finished
-      .catch(() => {})
-      .finally(() => {
-        // Going light, swap while the disc still covers the screen.
-        if (goingLight) commit();
-        disc.remove();
-      });
+    const transition = document.startViewTransition(commit);
+    transition.finished.finally(() => {
+      delete root.dataset.themeAnim;
+    });
   };
 
   return (
@@ -196,9 +175,8 @@ export default function Header() {
       )}
     </header>
 
-    {/* Floating theme toggle — fixed lower-right. Sits above the expanding
-        disc (z-55) so the button stays visible throughout the switch. */}
-    <div className="fixed bottom-6 right-6 z-[60]">
+    {/* Floating theme toggle — fixed lower-right, above page content. */}
+    <div className="fixed bottom-6 right-6 z-50">
       <ThemeToggle theme={theme} onChange={applyTheme} />
     </div>
     </>

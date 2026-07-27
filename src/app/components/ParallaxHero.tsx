@@ -14,7 +14,9 @@ export default function ParallaxHero() {
       raf = requestAnimationFrame(() => {
         const y = window.scrollY;
         if (glowRef.current)
-          glowRef.current.style.transform = `translateY(${y * 0.3}px)`;
+          // Keeps the -50% X centring: an inline transform replaces the
+          // class-based one wholesale.
+          glowRef.current.style.transform = `translate(-50%, ${y * 0.3}px)`;
         if (cardRef.current)
           cardRef.current.style.transform = `translateY(${y * -0.06}px)`;
       });
@@ -31,12 +33,17 @@ export default function ParallaxHero() {
       id="home"
       className="relative overflow-hidden px-6 pt-36 pb-12 md:pt-44 md:pb-16"
     >
-      {/* Background glow */}
+      {/* Background glow. Gradient rather than a blurred disc: a
+          `filter: blur()` glow is dropped during the theme-switch animation,
+          which snapped the soft glow into a hard-edged circle mid-swap. */}
       <div
         ref={glowRef}
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full blur-[120px]"
-        style={{ background: "var(--glow)" }}
+        className="pointer-events-none absolute -top-40 left-1/2 h-[600px] w-[600px] -translate-x-1/2"
+        style={{
+          background:
+            "radial-gradient(closest-side, var(--glow), transparent 100%)",
+        }}
       />
 
       <div className="relative mx-auto grid max-w-[1240px] items-center gap-14 md:grid-cols-2">

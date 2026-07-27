@@ -220,9 +220,6 @@ section[id] {
 :root[data-theme-anim] .backdrop-blur-md {
   backdrop-filter: none !important;
 }
-:root[data-theme-anim] .blur-\[120px\] {
-  filter: none !important;
-}
 
 /* Mobile burger — three bars that cross into an X when open. */
 .burger-bar {

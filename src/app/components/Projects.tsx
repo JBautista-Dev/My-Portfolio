@@ -42,6 +42,15 @@ const projects: Project[] = [
     logo: "/Maya-Bank-logo.jpg",
   },
   {
+    title: "Grab Website Content Updates",
+    description:
+    "Maintain and update the Grab website, handling content updates, page-level improvements, and coordinating fixes across the stack to keep the user experience reliable.",
+    tags: ["WordPress"],
+    href: "https://www.grab.com/ph/",
+    thumb: "→ grab.com/ph",
+    logo: "/Grab-logo.png",
+  },
+  {
     title: "Portfolio Website",
     description:
       "A modern, responsive portfolio built with Next.js and Tailwind CSS featuring parallax scrolling and smooth scroll-reveal animations.",

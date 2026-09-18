@@ -16,10 +16,31 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
+          # Normalise the secret: strip whitespace, any trailing slashes, and a
+          # /rest/v1 suffix if it was pasted in. A trailing slash produces a
+          # double slash in the path, which PostgREST rejects with PGRST125.
+          base=$(printf '%s' "$SUPABASE_URL" | tr -d '[:space:]')
+          base=${base%/}
+          base=${base%/rest/v1}
+          base=${base%/}
+
+          if [ -z "$base" ]; then
+            echo "SUPABASE_URL secret is empty"
+            exit 1
+          fi
+          echo "Pinging ${base}/rest/v1/projects"
+
           status=$(curl -s -o /tmp/body.txt -w "%{http_code}" \
-            "$SUPABASE_URL/rest/v1/projects?select=id&limit=1" \
+            "${base}/rest/v1/projects?select=id&limit=1" \
             -H "apikey: $SUPABASE_ANON_KEY" \
             -H "Authorization: Bearer $SUPABASE_ANON_KEY")
           echo "HTTP $status"
           cat /tmp/body.txt
-          test "$status" = "200"
+          echo
+
+          case "$status" in
+            200) echo "Keep-alive OK" ;;
+            401) echo "Check the SUPABASE_ANON_KEY secret (wrong or truncated key)"; exit 1 ;;
+            404) echo "Check the SUPABASE_URL secret, or run supabase/schema.sql to create the tables"; exit 1 ;;
+            *)   echo "Unexpected status"; exit 1 ;;
+          esac

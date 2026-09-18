@@ -1,0 +1,79 @@
+"use client";
+import Image from "next/image";
+import { useReveal } from "./useReveal";
+import type { Project } from "@/lib/types";
+
+export default function ProjectRow({
+  project,
+  index,
+}: {
+  project: Project;
+  index: number;
+}) {
+  const { ref, visible } = useReveal<HTMLAnchorElement>(index * 100);
+
+  return (
+    <a
+      ref={ref}
+      href={project.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`reveal ${
+        visible ? "is-visible" : ""
+      } group grid grid-cols-1 items-center gap-6 border-t border-border px-4 py-10 transition-colors hover:bg-[var(--surface-soft)] md:grid-cols-[auto_1fr_320px] md:gap-10`}
+    >
+      <span className="font-mono text-[13px] text-faint">
+        0{index + 1}
+      </span>
+
+      <div>
+        <div className="flex items-center gap-3">
+          <h3
+            className="font-grotesk font-semibold leading-tight transition-colors group-hover:text-[var(--accent-text)]"
+            style={{ fontSize: "clamp(1.6rem, 3vw, 2.4rem)" }}
+          >
+            {project.title}
+          </h3>
+          <span className="inline-block translate-y-0 text-[var(--accent-text)] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1">
+            ↗
+          </span>
+        </div>
+        <p className="mt-3 max-w-xl text-[1.02rem] leading-[1.6] text-muted">
+          {project.description}
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full border border-border-soft px-3 py-1 font-mono text-[11px] uppercase tracking-[0.1em] text-dim"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Thumbnail */}
+      <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-border">
+        {project.contain && (
+          <div className="absolute inset-0 bg-black" />
+        )}
+        <Image
+          src={project.logo}
+          alt={`${project.title} logo`}
+          fill
+          sizes="(max-width: 768px) 100vw, 320px"
+          className={`transition-transform duration-500 group-hover:scale-[1.07] ${
+            project.contain ? "object-contain p-8" : "object-cover"
+          }`}
+        />
+        <span className="absolute bottom-3 left-3 font-mono text-[12px] text-muted">
+          {project.thumb}
+        </span>
+        <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-accent text-[var(--accent-ink)]">
+          ↗
+        </span>
+      </div>
+    </a>
+  );
+}

@@ -1,16 +1,10 @@
-const items = [
-  "HubSpot & WordPress Developer",
-  "HubSpot CMS",
-  "HubL",
-  "HubDB",
-  "WordPress",
-  "PHP",
-  "Clean Code",
-];
+import { getSiteData } from "@/lib/content";
 
-export default function Marquee() {
+export default async function Marquee() {
+  const { marqueeItems } = await getSiteData();
+
   // One repeated group, wide enough to overflow most viewports.
-  const group = [...items, ...items, ...items];
+  const group = [...marqueeItems, ...marqueeItems, ...marqueeItems];
   return (
     <div className="overflow-hidden border-y border-border py-4">
       {/* Two identical groups sit side by side; the track shifts left by

@@ -1,6 +1,7 @@
 "use client";
 import SectionMarker from "./SectionMarker";
 import { useReveal } from "./useReveal";
+import { toParagraphs } from "@/lib/paragraphs";
 import type { Content } from "@/lib/types";
 
 export default function AboutClient({
@@ -18,8 +19,8 @@ export default function AboutClient({
     <section id="about" className="px-6 py-24">
       <div className="mx-auto max-w-[1240px]">
         <SectionMarker
-          number={content["about.marker_number"]}
-          label={content["about.marker_label"]}
+          number="01"
+          label="About Me"
         />
 
         <div
@@ -30,26 +31,32 @@ export default function AboutClient({
             className="font-grotesk font-bold leading-[1.05] tracking-[-0.02em]"
             style={{ fontSize: "clamp(2.2rem, 5vw, 4rem)" }}
           >
-            {content["about.heading"]}
+            Who I Am
           </h2>
 
           <div>
-            <p className="text-[1.15rem] leading-[1.7] text-muted">
-              {content["about.paragraph_1"]}
-            </p>
-            <p className="mt-5 text-[1.05rem] leading-[1.7] text-dim">
-              {content["about.paragraph_2"]}
-            </p>
+            {toParagraphs(content["about.intro"]).map((text, i) => (
+              <p
+                key={i}
+                className={
+                  i === 0
+                    ? "text-[1.15rem] leading-[1.7] text-muted"
+                    : "mt-5 text-[1.05rem] leading-[1.7] text-dim"
+                }
+              >
+                {text}
+              </p>
+            ))}
           </div>
         </div>
 
         <div className="mt-16">
           <div className="flex items-baseline gap-3">
             <h3 className="font-mono text-[12px] uppercase tracking-[0.2em] text-dim">
-              {content["about.core_heading"]}
+              Core Stack
             </h3>
             <span className="font-mono text-[11px] text-faint">
-              {content["about.core_note"]}
+              day-to-day, production work
             </span>
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
@@ -68,10 +75,10 @@ export default function AboutClient({
         <div className="mt-10">
           <div className="flex items-baseline gap-3">
             <h3 className="font-mono text-[12px] uppercase tracking-[0.2em] text-dim">
-              {content["about.working_heading"]}
+              Working Knowledge
             </h3>
             <span className="font-mono text-[11px] text-faint">
-              {content["about.working_note"]}
+              built real projects with these — including this site
             </span>
           </div>
           <div className="mt-6 flex flex-wrap gap-3">

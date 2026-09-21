@@ -16,122 +16,22 @@ export const contentDefaults: [string, string, string, string][] = [
 
   // ---------- Hero ----------
   ["hero.eyebrow", "→ HubSpot CMS & WordPress Developer", "hero", "Small line above the big title"],
-  ["hero.title_prefix", "Hi, I'm", "hero", "First line of the big title"],
-  ["hero.title_name", "Joshua", "hero", "Second line (highlighted)"],
   [
     "hero.intro",
     "I build and maintain HubSpot CMS and WordPress sites — HubL modules, HubDB-driven content, and clean, responsive front-end work.",
     "hero",
     "Paragraph under the title",
   ],
-  ["hero.cta_primary_label", "View Projects →", "hero", "Filled button text"],
-  ["hero.cta_primary_href", "#projects", "hero", "Filled button link"],
-  ["hero.cta_secondary_label", "Get In Touch", "hero", "Outlined button text"],
-  ["hero.cta_secondary_href", "#contact", "hero", "Outlined button link"],
-  ["hero.terminal_prompt", "joshua@bauworks ~ %", "hero", "Terminal title bar text"],
-  ["hero.terminal_cmd_1", "whoami", "hero", "Terminal command 1"],
+  // One row, not one per paragraph. Blank lines split it into paragraphs
+  // when rendered, so the Table Editor stays short and the text is edited
+  // as a single block.
   [
-    "hero.terminal_out_1",
-    "Joshua Bautista — HubSpot CMS & WordPress Developer",
-    "hero",
-    "Terminal output 1",
-  ],
-  ["hero.terminal_cmd_2", "stack --list", "hero", "Terminal command 2"],
-  [
-    "hero.terminal_out_2",
-    "hubspot · hubl · hubdb · wordpress · php · javascript",
-    "hero",
-    "Terminal output 2",
-  ],
-  [
-    "hero.terminal_cmd_3",
-    "status > available for work",
-    "hero",
-    "Terminal command 3 (last line, no output)",
-  ],
-
-  // ---------- About ----------
-  ["about.marker_number", "01", "about", "Section number"],
-  ["about.marker_label", "About Me", "about", "Section label"],
-  ["about.heading", "Who I Am", "about", "Section heading"],
-  [
-    "about.paragraph_1",
-    "I'm a web developer specializing in HubSpot CMS and WordPress. I build and maintain sites for Maya's business units — working with HubL modules, HubDB schema design, and editor-friendly page templates that let content teams manage their own pages without touching code.",
+    "about.intro",
+    "I'm a web developer specializing in HubSpot CMS and WordPress. I build and maintain sites for Maya's business units — working with HubL modules, HubDB schema design, and editor-friendly page templates that let content teams manage their own pages without touching code.\n\nI'm strongest on the CMS and front-end side (HTML, CSS, JavaScript), and I'm actively expanding into React, Next.js, and TypeScript through personal projects — including this portfolio, which I built with Next.js and Tailwind. I care about clean, maintainable code and building things that are genuinely easy to use.",
     "about",
-    "First paragraph",
+    "Intro text — leave a blank line between paragraphs",
   ],
-  [
-    "about.paragraph_2",
-    "I'm strongest on the CMS and front-end side (HTML, CSS, JavaScript), and I'm actively expanding into React, Next.js, and TypeScript through personal projects — including this portfolio, which I built with Next.js and Tailwind. I care about clean, maintainable code and building things that are genuinely easy to use.",
-    "about",
-    "Second paragraph",
-  ],
-  ["about.core_heading", "Core Stack", "about", "Heading above the first skill row"],
-  ["about.core_note", "day-to-day, production work", "about", "Note next to Core Stack"],
-  ["about.working_heading", "Working Knowledge", "about", "Heading above the second skill row"],
-  [
-    "about.working_note",
-    "built real projects with these — including this site",
-    "about",
-    "Note next to Working Knowledge",
-  ],
-  ["about.page_heading", "Hello! I'm Joshua", "about", "Heading on the /about page"],
   ["about.page_image", "/assets/wall.jpg", "about", "Image on the /about page"],
-  ["about.page_image_alt", "About Joshua", "about", "Alt text for the /about image"],
-
-  // ---------- Projects ----------
-  ["projects.marker_number", "02", "projects", "Section number"],
-  ["projects.marker_label", "Selected Work", "projects", "Section label"],
-  ["projects.heading", "Featured Projects", "projects", "Section heading"],
-
-  // ---------- Marquee ----------
-  // (items live in the marquee_items table)
-
-  // ---------- Contact ----------
-  ["contact.marker_number", "03", "contact", "Section number"],
-  ["contact.marker_label", "Contact", "contact", "Section label"],
-  ["contact.heading_prefix", "Let's Work", "contact", "Heading, normal colour"],
-  ["contact.heading_accent", "Together", "contact", "Heading, accent colour"],
-  [
-    "contact.intro",
-    "Have a project in mind or want to chat? Fill out the form below — I'm always open to new opportunities and collaborations.",
-    "contact",
-    "Paragraph under the heading",
-  ],
-  [
-    "contact.formspree_endpoint",
-    "https://formspree.io/f/xpqvyjoy",
-    "contact",
-    "Formspree form endpoint the contact form posts to",
-  ],
-  ["contact.label_name", "Name", "contact", "Name field label"],
-  ["contact.label_email", "Email", "contact", "Email field label"],
-  ["contact.label_message", "Message", "contact", "Message field label"],
-  ["contact.submit_label", "Send Message →", "contact", "Submit button text"],
-  ["contact.sending_label", "Sending…", "contact", "Submit button text while sending"],
-  [
-    "contact.success_title",
-    "Thanks! Your message is on its way.",
-    "contact",
-    "Success message, bold line",
-  ],
-  [
-    "contact.success_body",
-    "I'll get back to you as soon as I can.",
-    "contact",
-    "Success message, small line",
-  ],
-  [
-    "contact.error_message",
-    "Something went wrong. Please try again or email me directly.",
-    "contact",
-    "Shown when the form fails to send",
-  ],
-
-  // ---------- Footer ----------
-  ["footer.copyright", "Joshua Bautista © 2026", "footer", "Left side"],
-  ["footer.built_with", "Built with Next.js & Tailwind CSS", "footer", "Middle"],
-  ["footer.back_to_top", "Back to top ↑", "footer", "Right side link text"],
 ];
 
 export const projectDefaults: Project[] = [

@@ -3,20 +3,20 @@ import ProjectRow from "./ProjectRow";
 import { getSiteData } from "@/lib/content";
 
 export default async function Projects() {
-  const { content, projects } = await getSiteData();
+  const { projects } = await getSiteData();
 
   return (
     <section id="projects" className="px-6 py-24">
       <div className="mx-auto max-w-[1240px]">
         <SectionMarker
-          number={content["projects.marker_number"]}
-          label={content["projects.marker_label"]}
+          number="02"
+          label="Selected Work"
         />
         <h2
           className="mb-6 font-grotesk font-bold tracking-[-0.02em]"
           style={{ fontSize: "clamp(2.2rem, 5vw, 4rem)" }}
         >
-          {content["projects.heading"]}
+          Featured Projects
         </h2>
 
         <div className="border-b border-border">

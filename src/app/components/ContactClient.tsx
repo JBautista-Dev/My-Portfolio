@@ -2,15 +2,28 @@
 import { useState } from "react";
 import SectionMarker from "./SectionMarker";
 import { useReveal } from "./useReveal";
-import type { Content, LinkItem } from "@/lib/types";
+import type { LinkItem } from "@/lib/types";
 
 type Status = "idle" | "sending" | "success" | "error";
 
+// Form wiring, not editable content. These are tied to the markup and the
+// Formspree account, so they live here instead of in site_content.
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xpqvyjoy";
+
+const FORM = {
+  labelName: "Name",
+  labelEmail: "Email",
+  labelMessage: "Message",
+  submit: "Send Message →",
+  sending: "Sending…",
+  successTitle: "Thanks! Your message is on its way.",
+  successBody: "I'll get back to you as soon as I can.",
+  error: "Something went wrong. Please try again or email me directly.",
+} as const;
+
 export default function ContactClient({
-  content,
   socialLinks,
 }: {
-  content: Content;
   socialLinks: LinkItem[];
 }) {
   const { ref, visible } = useReveal<HTMLDivElement>();
@@ -22,7 +35,7 @@ export default function ContactClient({
     setStatus("sending");
 
     try {
-      const res = await fetch(content["contact.formspree_endpoint"], {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
         headers: { Accept: "application/json" },
         body: new FormData(form),
@@ -43,8 +56,8 @@ export default function ContactClient({
     <section id="contact" className="px-6 py-24">
       <div className="mx-auto max-w-[1240px]">
         <SectionMarker
-          number={content["contact.marker_number"]}
-          label={content["contact.marker_label"]}
+          number="03"
+          label="Contact"
         />
 
         <div
@@ -58,23 +71,24 @@ export default function ContactClient({
               className="font-grotesk font-bold tracking-[-0.02em]"
               style={{ fontSize: "clamp(2.2rem, 5vw, 4rem)" }}
             >
-              {content["contact.heading_prefix"]}{" "}
+              Let&apos;s Work{" "}
               <span className="text-[var(--accent-text)]">
-                {content["contact.heading_accent"]}
+                Together
               </span>
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-[1.1rem] leading-[1.6] text-muted">
-              {content["contact.intro"]}
+              Have a project in mind or want to chat? Fill out the form below —
+              I&apos;m always open to new opportunities and collaborations.
             </p>
           </div>
 
           {status === "success" ? (
             <div className="mx-auto mt-10 max-w-xl rounded-md border border-border-strong bg-[var(--surface)] px-6 py-8 text-center">
               <p className="font-grotesk text-lg font-bold text-[var(--accent-text)]">
-                {content["contact.success_title"]}
+                {FORM.successTitle}
               </p>
               <p className="mt-2 text-sm text-muted">
-                {content["contact.success_body"]}
+                {FORM.successBody}
               </p>
             </div>
           ) : (
@@ -97,7 +111,7 @@ export default function ContactClient({
                   htmlFor="name"
                   className="font-mono text-[12px] uppercase tracking-[0.1em] text-muted"
                 >
-                  {content["contact.label_name"]}
+                  {FORM.labelName}
                 </label>
                 <input
                   id="name"
@@ -113,7 +127,7 @@ export default function ContactClient({
                   htmlFor="email"
                   className="font-mono text-[12px] uppercase tracking-[0.1em] text-muted"
                 >
-                  {content["contact.label_email"]}
+                  {FORM.labelEmail}
                 </label>
                 <input
                   id="email"
@@ -129,7 +143,7 @@ export default function ContactClient({
                   htmlFor="message"
                   className="font-mono text-[12px] uppercase tracking-[0.1em] text-muted"
                 >
-                  {content["contact.label_message"]}
+                  {FORM.labelMessage}
                 </label>
                 <textarea
                   id="message"
@@ -146,13 +160,13 @@ export default function ContactClient({
                 className="mt-2 rounded-md bg-accent px-7 py-3.5 font-mono text-[13px] uppercase tracking-[0.1em] text-[var(--accent-ink)] transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {status === "sending"
-                  ? content["contact.sending_label"]
-                  : content["contact.submit_label"]}
+                  ? FORM.sending
+                  : FORM.submit}
               </button>
 
               {status === "error" && (
                 <p className="text-center text-sm text-red-500">
-                  {content["contact.error_message"]}
+                  {FORM.error}
                 </p>
               )}
             </form>

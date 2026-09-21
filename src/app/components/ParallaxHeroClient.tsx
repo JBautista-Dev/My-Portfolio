@@ -65,10 +65,10 @@ export default function ParallaxHeroClient({ content }: { content: Content }) {
               } as CSSProperties
             }
           >
-            {content["hero.title_prefix"]}
+            Hi, I&apos;m
             <br />
             <span className="text-[var(--accent-text)]">
-              {content["hero.title_name"]}
+              Joshua
             </span>
             <span className="cursor-blink text-[var(--accent-text)]">_</span>
           </h1>
@@ -83,16 +83,16 @@ export default function ParallaxHeroClient({ content }: { content: Content }) {
             style={{ "--d": "320ms" } as CSSProperties}
           >
             <a
-              href={content["hero.cta_primary_href"]}
+              href="#projects"
               className="rounded-md bg-accent px-6 py-3 font-mono text-[13px] uppercase tracking-[0.1em] text-[var(--accent-ink)] transition-transform hover:-translate-y-0.5"
             >
-              {content["hero.cta_primary_label"]}
+              View Projects →
             </a>
             <a
-              href={content["hero.cta_secondary_href"]}
+              href="#contact"
               className="rounded-md border border-border-strong px-6 py-3 font-mono text-[13px] uppercase tracking-[0.1em] text-text transition-colors hover:border-[var(--accent-text)] hover:text-[var(--accent-text)]"
             >
-              {content["hero.cta_secondary_label"]}
+              Get In Touch
             </a>
           </div>
         </div>
@@ -115,28 +115,28 @@ export default function ParallaxHeroClient({ content }: { content: Content }) {
               <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
               <span className="h-3 w-3 rounded-full bg-[#27c93f]" />
               <span className="ml-3 font-mono text-[12px] text-faint">
-                {content["hero.terminal_prompt"]}
+                joshua@bauworks ~ %
               </span>
             </div>
             {/* Body */}
             <div className="space-y-4 p-6 font-mono text-[13px] leading-relaxed">
               <div>
                 <span className="text-[var(--accent-text)]">$</span>{" "}
-                <span className="text-text">{content["hero.terminal_cmd_1"]}</span>
+                <span className="text-text">whoami</span>
                 <div className="mt-1 text-dim">
-                  {content["hero.terminal_out_1"]}
+                  Joshua Bautista — HubSpot CMS & WordPress Developer
                 </div>
               </div>
               <div>
                 <span className="text-[var(--accent-text)]">$</span>{" "}
-                <span className="text-text">{content["hero.terminal_cmd_2"]}</span>
+                <span className="text-text">stack --list</span>
                 <div className="mt-1 text-dim">
-                  {content["hero.terminal_out_2"]}
+                  hubspot · hubl · hubdb · wordpress · php · javascript
                 </div>
               </div>
               <div>
                 <span className="text-[var(--accent-text)]">$</span>{" "}
-                <span className="text-text">{content["hero.terminal_cmd_3"]}</span>
+                <span className="text-text">status &gt; available for work</span>
                 <span className="cursor-blink text-[var(--accent-text)]">_</span>
               </div>
             </div>

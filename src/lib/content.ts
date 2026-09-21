@@ -34,9 +34,25 @@ const fallback: SiteData = {
  * render shares a single round trip. Any table that errors or comes back
  * empty falls back to the repo content, so a paused or misconfigured
  * Supabase project degrades to the current site instead of a blank page.
+ *
+ * The fallback is a safety net for local work, not for production. Missing
+ * env vars on the host throw instead, so a misconfigured deploy fails
+ * visibly rather than quietly serving the repo content as if it were live.
  */
 export const getSiteData = cache(async (): Promise<SiteData> => {
-  if (!supabase) return fallback;
+  if (!supabase) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "Supabase is not configured: NEXT_PUBLIC_SUPABASE_URL and " +
+          "NEXT_PUBLIC_SUPABASE_ANON_KEY are missing. Add them to the host's " +
+          "environment variables and redeploy."
+      );
+    }
+    console.warn(
+      "Supabase env vars missing — rendering from content-defaults.ts."
+    );
+    return fallback;
+  }
 
   const [content, projects, skills, marquee, nav, social] = await Promise.all([
     supabase.from("site_content").select("key, value"),
@@ -51,9 +67,20 @@ export const getSiteData = cache(async (): Promise<SiteData> => {
     supabase.from("social_links").select("label, href").order("sort_order"),
   ]);
 
-  for (const result of [content, projects, skills, marquee, nav, social]) {
+  const tables = {
+    site_content: content,
+    projects,
+    skills,
+    marquee_items: marquee,
+    nav_links: nav,
+    social_links: social,
+  };
+
+  for (const [table, result] of Object.entries(tables)) {
     if (result.error) {
-      console.error("Supabase content fetch failed:", result.error.message);
+      console.error(`Supabase read failed for ${table}:`, result.error.message);
+    } else if (!result.data?.length) {
+      console.warn(`Supabase returned no rows for ${table} — using defaults.`);
     }
   }
 

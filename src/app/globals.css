@@ -79,8 +79,8 @@
   --color-accent-ink: var(--accent-ink);
   --color-solid: var(--solid);
   --color-solid-ink: var(--solid-ink);
-  --font-grotesk: var(--font-grotesk);
-  --font-mono: var(--font-mono);
+  --font-grotesk: "Space Grotesk Variable", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
 }
 
 * {
@@ -94,7 +94,7 @@ html {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-grotesk), system-ui, sans-serif;
+  font-family: var(--font-grotesk);
   overflow-x: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
 }

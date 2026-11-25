@@ -1,20 +1,9 @@
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import type { Metadata } from "next";
-import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import "@fontsource-variable/space-grotesk";
+import "@fontsource-variable/jetbrains-mono";
 import "./globals.css";
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-grotesk",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-});
 
 export const metadata: Metadata = {
   title: "Joshua Bautista | Web Developer",
@@ -46,7 +35,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body id="top" className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}>
+      <body id="top" className="antialiased">
         <Header />
         {children}
         <Footer />

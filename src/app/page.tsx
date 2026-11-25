@@ -13,9 +13,9 @@ export default function Home() {
   return (
     <main>
       <ParallaxHero />
+      <Projects />
       <Marquee />
       <About />
-      <Projects />
       <Contact />
     </main>
   );

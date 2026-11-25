@@ -14,6 +14,9 @@ export const contentDefaults: [string, string, string, string][] = [
   ["header.cta_label", "Get in touch", "header", "Header button text"],
   ["header.cta_href", "mailto:joshuabautista0531@gmail.com", "header", "Header button link"],
 
+  ["contact.email", "joshuabautista0531@gmail.com", "contact", "Public contact email"],
+  ["work.maya_outcome", "I built a way for Maya’s content team to publish promotions on their own, from the searchable deals listing to each individual offer.", "work", "Maya case study introduction"],
+
   // ---------- Hero ----------
   ["hero.eyebrow", "→ HubSpot CMS & WordPress Developer", "hero", "Small line above the big title"],
   [
@@ -38,7 +41,7 @@ export const projectDefaults: Project[] = [
   {
     title: "Maya Deals & Promos",
     description:
-      "Built the deals/promos system on maya.ph/deals — a custom HubL listing module querying a HubDB table via hubdb_table_rows() with category filters, expiry-based sorting, and an 'ending soon' view, plus the CMS page template behind every deal detail page so the content team creates promos without developer involvement.",
+      "I built a custom HubL module that reads deals from HubDB, filters them by category, and sorts them by expiry for the “Ending soon” view. Each offer uses a shared CMS detail template.",
     tags: ["HubSpot", "HubL", "HubDB"],
     href: "https://www.maya.ph/deals",
     thumb: "→ maya.ph/deals",
@@ -48,7 +51,7 @@ export const projectDefaults: Project[] = [
   {
     title: "Maya",
     description:
-      "Ongoing HubSpot CMS maintenance across maya.ph, maya.ph/center, and maya.ph/business — building modules, updating HubDB-driven content, and keeping the marketing, help center, and business sites consistent.",
+      "I build reusable HubSpot modules and maintain HubDB content across Maya’s main site, Maya Center, and Maya Business.",
     tags: ["HubSpot", "HubDB", "HubL"],
     href: "https://www.maya.ph/",
     thumb: "→ maya.ph",
@@ -58,7 +61,7 @@ export const projectDefaults: Project[] = [
   {
     title: "Maya Bank",
     description:
-      "Maintain and update the Maya Bank website, handling release deployments, page-level improvements, and coordinating fixes across the stack to keep the banking experience reliable.",
+      "I deploy WordPress releases for Maya Bank, update customer-facing pages, and coordinate fixes across the site.",
     tags: ["WordPress", "PHP", "HubDB"],
     href: "https://www.mayabank.ph/",
     thumb: "→ mayabank.ph",
@@ -68,7 +71,7 @@ export const projectDefaults: Project[] = [
   {
     title: "Grab Website Content Updates",
     description:
-      "Maintain and update the Grab website, handling content updates, page-level improvements, and coordinating fixes across the stack to keep the user experience reliable.",
+      "I publish and maintain pages and posts for Grab Philippines using its existing WordPress templates.",
     tags: ["WordPress"],
     href: "https://www.grab.com/ph/",
     thumb: "→ grab.com/ph",
@@ -78,7 +81,7 @@ export const projectDefaults: Project[] = [
   {
     title: "Portfolio Website",
     description:
-      "A modern, responsive portfolio built with Next.js and Tailwind CSS featuring parallax scrolling and smooth scroll-reveal animations.",
+      "I built this portfolio with Next.js and connected it to Supabase so I can edit projects, skills, and site copy without redeploying.",
     tags: ["Next.js", "TypeScript", "Tailwind CSS"],
     href: "https://github.com/JBautista-Dev/My-Portfolio",
     thumb: "→ portfolio",
@@ -114,8 +117,8 @@ export const marqueeDefaults: string[] = [
 ];
 
 export const navLinkDefaults: LinkItem[] = [
-  { label: "About", href: "#about" },
   { label: "Projects", href: "#projects" },
+  { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
 

@@ -12,7 +12,7 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(delay = 0) {
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !("IntersectionObserver" in window)) return;
 
     // Fallback: already in viewport on mount.
     const rect = el.getBoundingClientRect();

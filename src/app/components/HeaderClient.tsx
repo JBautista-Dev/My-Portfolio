@@ -1,10 +1,23 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import { flushSync } from "react-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 import type { LinkItem } from "@/lib/types";
 
 type Theme = "dark" | "light";
+
+function readTheme(): Theme {
+  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
+}
+
+function subscribeTheme(update: () => void) {
+  window.addEventListener("themechange", update);
+  return () => window.removeEventListener("themechange", update);
+}
+
+const serverTheme = (): Theme => "dark";
 
 /**
  * Reads back the geometry the UA gave a view-transition pseudo-element, in
@@ -46,14 +59,13 @@ export default function HeaderClient({
   ctaLabel: string;
   ctaHref: string;
 }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const pathname = usePathname();
+  const theme = useSyncExternalStore(subscribeTheme, readTheme, serverTheme);
   const [active, setActive] = useState<string>("");
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const current =
-      (document.documentElement.getAttribute("data-theme") as Theme) || "dark";
-    setTheme(current);
+    if (!("IntersectionObserver" in window)) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -67,7 +79,7 @@ export default function HeaderClient({
       .querySelectorAll("section[id]")
       .forEach((s) => observer.observe(s));
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   const applyTheme = (next: Theme, origin?: { x: number; y: number }) => {
     // flushSync so React's re-render lands in the same frame as the attribute
@@ -75,8 +87,8 @@ export default function HeaderClient({
     // and the difference shows up as a flicker mid-transition.
     const commit = () => {
       flushSync(() => {
-        setTheme(next);
         document.documentElement.setAttribute("data-theme", next);
+        window.dispatchEvent(new Event("themechange"));
       });
       try {
         localStorage.setItem("theme", next);
@@ -175,9 +187,9 @@ export default function HeaderClient({
     <>
     <header className="fixed top-0 left-0 z-50 w-full border-b border-border backdrop-blur-md bg-[var(--nav-bg)]">
       <div className="mx-auto flex max-w-[1240px] items-center justify-between px-6 py-4">
-        <a href="#home" aria-label="bauworks home" className="flex items-center">
+        <Link href="/" onClick={() => setOpen(false)} aria-label="bauworks home" className="flex items-center">
           <Logo />
-        </a>
+        </Link>
 
         {/* Desktop nav */}
         <nav
@@ -189,7 +201,7 @@ export default function HeaderClient({
               key={label}
               href={href}
               className={`transition-colors ${
-                active === href.slice(1)
+                href === `/#${active}`
                   ? "text-text"
                   : "text-dim hover:text-text"
               }`}

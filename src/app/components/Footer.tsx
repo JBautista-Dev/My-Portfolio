@@ -9,8 +9,8 @@ export default function Footer() {
           Joshua Bautista © 2026
         </span>
         <span className="text-faint">Built with Next.js &amp; Tailwind CSS</span>
-        <a href="#home" className="transition-colors hover:text-text">
-          Back to top ↑
+        <a href="#top" className="transition-colors hover:text-text">
+          Back to top
         </a>
       </div>
     </footer>

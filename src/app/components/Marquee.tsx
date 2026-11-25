@@ -6,7 +6,7 @@ export default async function Marquee() {
   // One repeated group, wide enough to overflow most viewports.
   const group = [...marqueeItems, ...marqueeItems, ...marqueeItems];
   return (
-    <div className="overflow-hidden border-y border-border py-4">
+    <div aria-hidden="true" className="overflow-hidden border-y border-border py-4">
       {/* Two identical groups sit side by side; the track shifts left by
           exactly one group's width (-50%), so the loop is seamless. */}
       <div className="flex w-max animate-marquee">

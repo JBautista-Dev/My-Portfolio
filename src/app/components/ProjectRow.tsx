@@ -1,79 +1,50 @@
-"use client";
 import Image from "next/image";
-import { useReveal } from "./useReveal";
 import type { Project } from "@/lib/types";
 
-export default function ProjectRow({
-  project,
-  index,
-}: {
-  project: Project;
-  index: number;
-}) {
-  const { ref, visible } = useReveal<HTMLAnchorElement>(index * 100);
-
+export default function ProjectRow({ project }: { project: Project }) {
   return (
-    <a
-      ref={ref}
-      href={project.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`reveal ${
-        visible ? "is-visible" : ""
-      } group grid grid-cols-1 items-center gap-6 border-t border-border px-4 py-10 transition-colors hover:bg-[var(--surface-soft)] md:grid-cols-[auto_1fr_320px] md:gap-10`}
-    >
-      <span className="font-mono text-[13px] text-faint">
-        0{index + 1}
-      </span>
-
-      <div>
-        <div className="flex items-center gap-3">
-          <h3
-            className="font-grotesk font-semibold leading-tight transition-colors group-hover:text-[var(--accent-text)]"
-            style={{ fontSize: "clamp(1.6rem, 3vw, 2.4rem)" }}
-          >
-            {project.title}
-          </h3>
-          <span className="inline-block translate-y-0 text-[var(--accent-text)] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1">
-            ↗
-          </span>
-        </div>
-        <p className="mt-3 max-w-xl text-[1.02rem] leading-[1.6] text-muted">
-          {project.description}
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full border border-border-soft px-3 py-1 font-mono text-[11px] uppercase tracking-[0.1em] text-dim"
-            >
-              {tag}
+    <article>
+      <details className="group">
+        <summary className="cursor-pointer list-none rounded-sm py-5 sm:py-6 [&::-webkit-details-marker]:hidden">
+          <h3 className="grid grid-cols-[3.5rem_minmax(0,1fr)_2rem] items-center gap-3 sm:grid-cols-[5rem_minmax(0,1fr)_2rem] sm:gap-6">
+            <span className="relative block aspect-[10/7] overflow-hidden rounded-md border border-border bg-black">
+              <Image
+                src={project.logo}
+                alt=""
+                fill
+                sizes="(min-width: 640px) 80px, 56px"
+                className={project.contain ? "object-contain p-2" : "object-cover"}
+              />
             </span>
-          ))}
+            <span>
+              <span className="block text-xl leading-tight font-semibold tracking-tight group-hover:text-accent-text sm:text-2xl">
+                {project.title}
+              </span>
+              {project.tags.length > 0 && (
+                <span className="mt-1 block font-mono text-xs font-normal text-dim">
+                  {project.tags.join(" · ")}
+                </span>
+              )}
+            </span>
+            <span aria-hidden="true" className="grid size-8 place-items-center rounded-full border border-border-soft font-mono text-lg text-accent-text group-open:bg-surface-soft">
+              <span className="group-open:hidden">+</span>
+              <span className="hidden group-open:inline">−</span>
+            </span>
+          </h3>
+        </summary>
+        <div className="pb-6 sm:pl-[6.5rem]">
+          <p className="max-w-3xl leading-relaxed text-muted">{project.description}</p>
+          <a
+            href={project.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${project.title} (opens in a new tab)`}
+            className="mt-3 inline-block rounded-sm py-1 text-sm font-medium text-accent-text underline underline-offset-4"
+          >
+            {project.thumb.replace(/^→\s*/, "")}
+          </a>
         </div>
-      </div>
-
-      {/* Thumbnail */}
-      <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-border">
-        {project.contain && (
-          <div className="absolute inset-0 bg-black" />
-        )}
-        <Image
-          src={project.logo}
-          alt={`${project.title} logo`}
-          fill
-          sizes="(max-width: 768px) 100vw, 320px"
-          className={`transition-transform duration-500 group-hover:scale-[1.07] ${
-            project.contain ? "object-contain p-8" : "object-cover"
-          }`}
-        />
-        <span className="absolute bottom-3 left-3 font-mono text-[12px] text-muted">
-          {project.thumb}
-        </span>
-        <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-accent text-[var(--accent-ink)]">
-          ↗
-        </span>
-      </div>
-    </a>
+      </details>
+    </article>
   );
 }

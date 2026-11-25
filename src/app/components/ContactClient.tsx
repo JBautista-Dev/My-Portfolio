@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import SectionMarker from "./SectionMarker";
 import { useReveal } from "./useReveal";
 import type { LinkItem } from "@/lib/types";
 
@@ -14,7 +13,7 @@ const FORM = {
   labelName: "Name",
   labelEmail: "Email",
   labelMessage: "Message",
-  submit: "Send Message →",
+  submit: "Send message",
   sending: "Sending…",
   successTitle: "Thanks! Your message is on its way.",
   successBody: "I'll get back to you as soon as I can.",
@@ -23,8 +22,10 @@ const FORM = {
 
 export default function ContactClient({
   socialLinks,
+  email,
 }: {
   socialLinks: LinkItem[];
+  email: string;
 }) {
   const { ref, visible } = useReveal<HTMLDivElement>();
   const [status, setStatus] = useState<Status>("idle");
@@ -55,11 +56,6 @@ export default function ContactClient({
   return (
     <section id="contact" className="px-6 py-24">
       <div className="mx-auto max-w-[1240px]">
-        <SectionMarker
-          number="03"
-          label="Contact"
-        />
-
         <div
           ref={ref}
           className={`reveal ${
@@ -77,11 +73,17 @@ export default function ContactClient({
               </span>
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-[1.1rem] leading-[1.6] text-muted">
-              Have a project in mind or want to chat? Fill out the form below —
-              I&apos;m always open to new opportunities and collaborations.
+              Have a project in mind? Send a message here or email me at{" "}
+              <a className="break-words text-accent-text underline underline-offset-4" href={`mailto:${email}`}>
+                {email}
+              </a>.
             </p>
           </div>
 
+          <p className="sr-only" role="status">
+            {status === "sending" && FORM.sending}
+            {status === "success" && FORM.successTitle}
+          </p>
           {status === "success" ? (
             <div className="mx-auto mt-10 max-w-xl rounded-md border border-border-strong bg-[var(--surface)] px-6 py-8 text-center">
               <p className="font-grotesk text-lg font-bold text-[var(--accent-text)]">
@@ -93,6 +95,8 @@ export default function ContactClient({
             </div>
           ) : (
             <form
+              action={FORMSPREE_ENDPOINT}
+              method="post"
               onSubmit={handleSubmit}
               className="mx-auto mt-10 flex max-w-xl flex-col gap-5 text-left"
             >
@@ -115,10 +119,11 @@ export default function ContactClient({
                 </label>
                 <input
                   id="name"
+                  autoComplete="name"
                   name="name"
                   type="text"
                   required
-                  className="rounded-md border border-border-strong bg-transparent px-4 py-3 text-[15px] outline-none transition-colors focus:border-[var(--accent-text)]"
+                  className="rounded-md border border-border-strong bg-transparent px-4 py-3 text-base outline-none transition-colors focus:border-[var(--accent-text)]"
                 />
               </div>
 
@@ -131,10 +136,11 @@ export default function ContactClient({
                 </label>
                 <input
                   id="email"
+                  autoComplete="email"
                   name="email"
                   type="email"
                   required
-                  className="rounded-md border border-border-strong bg-transparent px-4 py-3 text-[15px] outline-none transition-colors focus:border-[var(--accent-text)]"
+                  className="rounded-md border border-border-strong bg-transparent px-4 py-3 text-base outline-none transition-colors focus:border-[var(--accent-text)]"
                 />
               </div>
 
@@ -150,7 +156,7 @@ export default function ContactClient({
                   name="message"
                   rows={5}
                   required
-                  className="resize-y rounded-md border border-border-strong bg-transparent px-4 py-3 text-[15px] outline-none transition-colors focus:border-[var(--accent-text)]"
+                  className="resize-y rounded-md border border-border-strong bg-transparent px-4 py-3 text-base outline-none transition-colors focus:border-[var(--accent-text)]"
                 />
               </div>
 
@@ -165,7 +171,7 @@ export default function ContactClient({
               </button>
 
               {status === "error" && (
-                <p className="text-center text-sm text-red-500">
+                <p role="alert" className="text-center text-sm font-medium text-text">
                   {FORM.error}
                 </p>
               )}

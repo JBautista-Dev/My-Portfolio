@@ -1,5 +1,4 @@
 "use client";
-import SectionMarker from "./SectionMarker";
 import { useReveal } from "./useReveal";
 import { toParagraphs } from "@/lib/paragraphs";
 import type { Content } from "@/lib/types";
@@ -18,11 +17,6 @@ export default function AboutClient({
   return (
     <section id="about" className="px-6 py-24">
       <div className="mx-auto max-w-[1240px]">
-        <SectionMarker
-          number="01"
-          label="About Me"
-        />
-
         <div
           ref={ref}
           className={`reveal ${visible ? "is-visible" : ""} grid gap-12 md:grid-cols-2`}
@@ -31,7 +25,7 @@ export default function AboutClient({
             className="font-grotesk font-bold leading-[1.05] tracking-[-0.02em]"
             style={{ fontSize: "clamp(2.2rem, 5vw, 4rem)" }}
           >
-            Who I Am
+            About me
           </h2>
 
           <div>
@@ -55,7 +49,7 @@ export default function AboutClient({
             <h3 className="font-mono text-[12px] uppercase tracking-[0.2em] text-dim">
               Core Stack
             </h3>
-            <span className="font-mono text-[11px] text-faint">
+            <span className="font-mono text-xs text-faint">
               day-to-day, production work
             </span>
           </div>
@@ -77,7 +71,7 @@ export default function AboutClient({
             <h3 className="font-mono text-[12px] uppercase tracking-[0.2em] text-dim">
               Working Knowledge
             </h3>
-            <span className="font-mono text-[11px] text-faint">
+            <span className="font-mono text-xs text-faint">
               built real projects with these — including this site
             </span>
           </div>

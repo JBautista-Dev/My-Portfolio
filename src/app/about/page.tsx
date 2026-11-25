@@ -10,7 +10,7 @@ export default async function AboutPage() {
   const { content } = await getSiteData();
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-24 bg-bg">
+    <main className="min-h-screen flex items-center justify-center px-6 py-24 bg-bg">
       <div className="max-w-4xl w-full flex flex-col md:flex-row gap-10 items-center">
         <div className="flex-1">
           <h1 className="mb-6 font-grotesk text-5xl font-bold tracking-[-0.02em] text-text">
@@ -39,6 +39,6 @@ export default async function AboutPage() {
           />
         </div>
       </div>
-    </div>
+    </main>
   );
 }

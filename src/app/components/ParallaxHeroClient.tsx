@@ -32,7 +32,7 @@ export default function ParallaxHeroClient({ content }: { content: Content }) {
   return (
     <section
       id="home"
-      className="relative overflow-hidden px-6 pt-36 pb-12 md:pt-44 md:pb-16"
+      className="relative overflow-hidden px-6 pt-28 pb-10 md:pt-36 md:pb-16"
     >
       {/* Background glow. Gradient rather than a blurred disc: a
           `filter: blur()` glow is dropped during the theme-switch animation,
@@ -65,12 +65,12 @@ export default function ParallaxHeroClient({ content }: { content: Content }) {
               } as CSSProperties
             }
           >
-            Hi, I&apos;m
+            Joshua
             <br />
             <span className="text-[var(--accent-text)]">
-              Joshua
+              Bautista
             </span>
-            <span className="cursor-blink text-[var(--accent-text)]">_</span>
+            <span aria-hidden="true" className="cursor-blink text-[var(--accent-text)]">_</span>
           </h1>
           <p
             className="reveal-hero mt-7 max-w-md text-[1.15rem] leading-[1.6] text-muted"
@@ -84,15 +84,15 @@ export default function ParallaxHeroClient({ content }: { content: Content }) {
           >
             <a
               href="#projects"
-              className="rounded-md bg-accent px-6 py-3 font-mono text-[13px] uppercase tracking-[0.1em] text-[var(--accent-ink)] transition-transform hover:-translate-y-0.5"
+              className="rounded-md bg-accent px-4 py-3 font-mono sm:px-6 text-[13px] uppercase tracking-[0.1em] text-[var(--accent-ink)] transition-transform hover:-translate-y-0.5"
             >
-              View Projects →
+              View projects
             </a>
             <a
               href="#contact"
-              className="rounded-md border border-border-strong px-6 py-3 font-mono text-[13px] uppercase tracking-[0.1em] text-text transition-colors hover:border-[var(--accent-text)] hover:text-[var(--accent-text)]"
+              className="rounded-md border border-border-strong px-4 py-3 font-mono sm:px-6 text-[13px] uppercase tracking-[0.1em] text-text transition-colors hover:border-[var(--accent-text)] hover:text-[var(--accent-text)]"
             >
-              Get In Touch
+              Get in touch
             </a>
           </div>
         </div>
@@ -100,7 +100,7 @@ export default function ParallaxHeroClient({ content }: { content: Content }) {
         {/* Right column — terminal card */}
         <div
           ref={cardRef}
-          className="reveal-hero will-change-transform"
+          className="reveal-hero hidden will-change-transform md:block"
           style={{ "--d": "240ms" } as CSSProperties}
         >
           <div
@@ -137,7 +137,7 @@ export default function ParallaxHeroClient({ content }: { content: Content }) {
               <div>
                 <span className="text-[var(--accent-text)]">$</span>{" "}
                 <span className="text-text">status &gt; available for work</span>
-                <span className="cursor-blink text-[var(--accent-text)]">_</span>
+                <span aria-hidden="true" className="cursor-blink text-[var(--accent-text)]">_</span>
               </div>
             </div>
           </div>

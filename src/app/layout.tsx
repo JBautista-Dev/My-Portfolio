@@ -46,7 +46,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}>
+      <body id="top" className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}>
         <Header />
         {children}
         <Footer />

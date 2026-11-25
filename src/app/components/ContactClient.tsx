@@ -17,15 +17,13 @@ const FORM = {
   sending: "Sending…",
   successTitle: "Thanks! Your message is on its way.",
   successBody: "I'll get back to you as soon as I can.",
-  error: "Something went wrong. Please try again or email me directly.",
+  error: "Something went wrong. Please try again.",
 } as const;
 
 export default function ContactClient({
   socialLinks,
-  email,
 }: {
   socialLinks: LinkItem[];
-  email: string;
 }) {
   const { ref, visible } = useReveal<HTMLDivElement>();
   const [status, setStatus] = useState<Status>("idle");
@@ -73,10 +71,7 @@ export default function ContactClient({
               </span>
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-[1.1rem] leading-[1.6] text-muted">
-              Have a project in mind? Send a message here or email me at{" "}
-              <a className="break-words text-accent-text underline underline-offset-4" href={`mailto:${email}`}>
-                {email}
-              </a>.
+              Have a project in mind? Send a message here.
             </p>
           </div>
 

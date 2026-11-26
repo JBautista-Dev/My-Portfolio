@@ -27,6 +27,7 @@
 # local screen recordings / debug captures
 *.mp4
 *.mov
+!/public/work/maya-deals/*.mp4
 
 # debug
 npm-debug.log*
